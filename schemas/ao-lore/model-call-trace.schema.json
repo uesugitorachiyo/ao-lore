@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/model-call-trace.schema.json",
+  "title": "AO Lore Redacted Model Call Trace v0.1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "role", "adapter", "model_id", "input_digest", "output_digest", "output_schema_version", "tokens", "latency_ms", "retry_count", "fallback", "error_state_redacted", "private_reasoning_persisted"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.model-call-trace.v0.1"}, "role": {"enum": ["parser", "distiller", "navigator", "synthesizer"]},
+    "adapter": {"type": "string"}, "model_id": {"type": "string"},
+    "input_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}, "output_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "output_schema_version": {"type": "string"}, "tokens": {"type": "integer", "minimum": 0}, "latency_ms": {"type": "integer", "minimum": 0},
+    "retry_count": {"type": "integer", "minimum": 0}, "fallback": {"type": "object", "additionalProperties": true},
+    "error_state_redacted": {"type": ["string", "null"]}, "private_reasoning_persisted": {"const": false}
+  }
+}

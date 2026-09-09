@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "https://schemas.ao-lore.example/evidence-recovery-v0.1.schema.json", "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "attempt_id", "phase", "status", "intended_digest", "staged_digest", "destination_digest", "classification", "recovery_digest", "legal_advice", "property_decision", "candidate_review", "candidate_decision", "promotion", "canonical_query", "provider", "credential", "private_data", "publication", "release", "deployment", "authority_advanced"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.evidence-recovery.v0.1"}, "attempt_id": {"$ref": "#/$defs/id"}, "phase": {"enum": ["acquisition", "graph_publication", "freshness"]}, "status": {"enum": ["staged", "interrupted", "completed", "conflict"]}, "intended_digest": {"$ref": "#/$defs/digest"}, "staged_digest": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/digest"}]}, "destination_digest": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/digest"}]}, "classification": {"enum": ["no_op", "resume", "complete", "investigate"]}, "recovery_digest": {"$ref": "#/$defs/digest"},
+    "legal_advice": {"const": false}, "property_decision": {"const": false}, "candidate_review": {"const": false}, "candidate_decision": {"const": false}, "promotion": {"const": false}, "canonical_query": {"const": false}, "provider": {"const": false}, "credential": {"const": false}, "private_data": {"const": false}, "publication": {"const": false}, "release": {"const": false}, "deployment": {"const": false}, "authority_advanced": {"const": false}
+  }, "$defs": {"id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"}, "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}
+}

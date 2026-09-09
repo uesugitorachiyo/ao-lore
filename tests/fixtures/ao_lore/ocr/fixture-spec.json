@@ -1,0 +1,866 @@
+{
+  "schema_version": "ao.lore.ocr-fixture-corpus.v0.1",
+  "configuration": {
+    "language": "en",
+    "dpi": 300,
+    "attempts_per_candidate": 2,
+    "maximum_pages": 100,
+    "maximum_source_bytes": 52428800,
+    "maximum_lines": 10000
+  },
+  "fixtures": [
+    {
+      "id": "clean",
+      "file": "clean.png",
+      "kind": "clean",
+      "sha256": "sha256:0d2df9cd1481baae527b932d2efc7ea4489da597ba21acb8f979dcc669a22d35",
+      "media_type": "image/png",
+      "expected_outcome": "accepted",
+      "expected_failure": null,
+      "pages": [
+        {
+          "page": 1,
+          "width": 600,
+          "height": 300,
+          "lines": [
+            {
+              "id": "clean-1",
+              "text": "CLEAN OCR TEXT",
+              "polygon": [
+                [
+                  34,
+                  34
+                ],
+                [
+                  544,
+                  34
+                ],
+                [
+                  544,
+                  94
+                ],
+                [
+                  34,
+                  94
+                ]
+              ]
+            },
+            {
+              "id": "clean-2",
+              "text": "SECOND LINE 123",
+              "polygon": [
+                [
+                  34,
+                  124
+                ],
+                [
+                  580,
+                  124
+                ],
+                [
+                  580,
+                  184
+                ],
+                [
+                  34,
+                  184
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "degraded",
+      "file": "degraded.png",
+      "kind": "degraded",
+      "sha256": "sha256:502baedc8eb727d5a6a8fc2bbc0d7bfb5c0233e60c67225f4fffb9aa88233e23",
+      "media_type": "image/png",
+      "expected_outcome": "accepted",
+      "expected_failure": null,
+      "pages": [
+        {
+          "page": 1,
+          "width": 600,
+          "height": 300,
+          "lines": [
+            {
+              "id": "degraded-1",
+              "text": "DEGRADED IMAGE",
+              "polygon": [
+                [
+                  34,
+                  64
+                ],
+                [
+                  544,
+                  64
+                ],
+                [
+                  544,
+                  124
+                ],
+                [
+                  34,
+                  124
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "faint",
+      "file": "faint.png",
+      "kind": "faint",
+      "sha256": "sha256:8fc68174df6c474aca09cfddc2c033db13eccae84b50c2a1f752cbe2ca477ab3",
+      "media_type": "image/png",
+      "expected_outcome": "accepted",
+      "expected_failure": null,
+      "pages": [
+        {
+          "page": 1,
+          "width": 600,
+          "height": 300,
+          "lines": [
+            {
+              "id": "faint-1",
+              "text": "FAINT PUBLIC TEXT",
+              "polygon": [
+                [
+                  35,
+                  85
+                ],
+                [
+                  550,
+                  85
+                ],
+                [
+                  550,
+                  135
+                ],
+                [
+                  35,
+                  135
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "uneven",
+      "file": "uneven.png",
+      "kind": "uneven",
+      "sha256": "sha256:7c608c9954e76bf6b2c43ad62b5babe24de37108152681b54cae3d9d9e487f98",
+      "media_type": "image/png",
+      "expected_outcome": "accepted",
+      "expected_failure": null,
+      "pages": [
+        {
+          "page": 1,
+          "width": 600,
+          "height": 300,
+          "lines": [
+            {
+              "id": "uneven-1",
+              "text": "UNEVEN LIGHT TEXT",
+              "polygon": [
+                [
+                  35,
+                  85
+                ],
+                [
+                  550,
+                  85
+                ],
+                [
+                  550,
+                  135
+                ],
+                [
+                  35,
+                  135
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rotated-90",
+      "file": "rotated-90.png",
+      "kind": "rotated-90",
+      "sha256": "sha256:cd40ed069e176c2f335e7314cfea43ce2d876a30daf049fa1c5feb96dca3e399",
+      "media_type": "image/png",
+      "expected_outcome": "accepted",
+      "expected_failure": null,
+      "pages": [
+        {
+          "page": 1,
+          "width": 300,
+          "height": 600,
+          "lines": [
+            {
+              "id": "rotated-90-1",
+              "text": "ROTATED TEXT",
+              "polygon": [
+                [
+                  213,
+                  34
+                ],
+                [
+                  267,
+                  34
+                ],
+                [
+                  267,
+                  478
+                ],
+                [
+                  213,
+                  478
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rotated-180",
+      "file": "rotated-180.png",
+      "kind": "rotated-180",
+      "sha256": "sha256:0b9838f917f8a186f3983d732fdacd8b3576a0c5482e62119b59d27adfe27149",
+      "media_type": "image/png",
+      "expected_outcome": "accepted",
+      "expected_failure": null,
+      "pages": [
+        {
+          "page": 1,
+          "width": 600,
+          "height": 300,
+          "lines": [
+            {
+              "id": "rotated-180-1",
+              "text": "UPSIDE DOWN TEXT",
+              "polygon": [
+                [
+                  71,
+                  221
+                ],
+                [
+                  556,
+                  221
+                ],
+                [
+                  556,
+                  271
+                ],
+                [
+                  71,
+                  271
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rotated-270",
+      "file": "rotated-270.png",
+      "kind": "rotated-270",
+      "sha256": "sha256:543f0580192f32ee61ecccf468fdb1f004d8f529e779983683f91a02a5e902e9",
+      "media_type": "image/png",
+      "expected_outcome": "accepted",
+      "expected_failure": null,
+      "pages": [
+        {
+          "page": 1,
+          "width": 300,
+          "height": 600,
+          "lines": [
+            {
+              "id": "rotated-270-1",
+              "text": "SIDEWAYS TEXT",
+              "polygon": [
+                [
+                  33,
+                  83
+                ],
+                [
+                  87,
+                  83
+                ],
+                [
+                  87,
+                  563
+                ],
+                [
+                  33,
+                  563
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "skewed",
+      "file": "skewed.png",
+      "kind": "skewed",
+      "sha256": "sha256:883d25eaa3c2db44e8236d292e1a1c0f8aeca75f964aba6852f4089488e9443f",
+      "media_type": "image/png",
+      "expected_outcome": "accepted",
+      "expected_failure": null,
+      "pages": [
+        {
+          "page": 1,
+          "width": 600,
+          "height": 300,
+          "lines": [
+            {
+              "id": "skewed-1",
+              "text": "SLIGHT SKEW TEXT",
+              "polygon": [
+                [
+                  36,
+                  75
+                ],
+                [
+                  521,
+                  75
+                ],
+                [
+                  524,
+                  125
+                ],
+                [
+                  39,
+                  125
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "one-column",
+      "file": "one-column.png",
+      "kind": "one-column",
+      "sha256": "sha256:1a67386fed3f58dfbda00d1bd5db9b64aa65071a1e3edc100443f64b8b2a38c0",
+      "media_type": "image/png",
+      "expected_outcome": "accepted",
+      "expected_failure": null,
+      "pages": [
+        {
+          "page": 1,
+          "width": 600,
+          "height": 400,
+          "lines": [
+            {
+              "id": "one-1",
+              "text": "FIRST PARAGRAPH",
+              "polygon": [
+                [
+                  34,
+                  34
+                ],
+                [
+                  580,
+                  34
+                ],
+                [
+                  580,
+                  94
+                ],
+                [
+                  34,
+                  94
+                ]
+              ]
+            },
+            {
+              "id": "one-2",
+              "text": "SECOND PARAGRAPH",
+              "polygon": [
+                [
+                  35,
+                  135
+                ],
+                [
+                  520,
+                  135
+                ],
+                [
+                  520,
+                  185
+                ],
+                [
+                  35,
+                  185
+                ]
+              ]
+            },
+            {
+              "id": "one-3",
+              "text": "THIRD PARAGRAPH",
+              "polygon": [
+                [
+                  34,
+                  234
+                ],
+                [
+                  580,
+                  234
+                ],
+                [
+                  580,
+                  294
+                ],
+                [
+                  34,
+                  294
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "two-column",
+      "file": "two-column.png",
+      "kind": "two-column",
+      "sha256": "sha256:0907211d7450e13088c29416fdcb72334f3dbd085af43d00f6ccc6a1a168210d",
+      "media_type": "image/png",
+      "expected_outcome": "accepted",
+      "expected_failure": null,
+      "pages": [
+        {
+          "page": 1,
+          "width": 900,
+          "height": 400,
+          "lines": [
+            {
+              "id": "left-1",
+              "text": "LEFT ONE",
+              "polygon": [
+                [
+                  24,
+                  34
+                ],
+                [
+                  318,
+                  34
+                ],
+                [
+                  318,
+                  94
+                ],
+                [
+                  24,
+                  94
+                ]
+              ]
+            },
+            {
+              "id": "left-2",
+              "text": "LEFT TWO",
+              "polygon": [
+                [
+                  24,
+                  144
+                ],
+                [
+                  318,
+                  144
+                ],
+                [
+                  318,
+                  204
+                ],
+                [
+                  24,
+                  204
+                ]
+              ]
+            },
+            {
+              "id": "right-1",
+              "text": "RIGHT ONE",
+              "polygon": [
+                [
+                  494,
+                  34
+                ],
+                [
+                  824,
+                  34
+                ],
+                [
+                  824,
+                  94
+                ],
+                [
+                  494,
+                  94
+                ]
+              ]
+            },
+            {
+              "id": "right-2",
+              "text": "RIGHT TWO",
+              "polygon": [
+                [
+                  494,
+                  144
+                ],
+                [
+                  824,
+                  144
+                ],
+                [
+                  824,
+                  204
+                ],
+                [
+                  494,
+                  204
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dense",
+      "file": "dense.png",
+      "kind": "dense",
+      "sha256": "sha256:9d14979719ae32241aef4a462d292dee1b7d9a05bb08be41d5a49a7a8b559e5e",
+      "media_type": "image/png",
+      "expected_outcome": "accepted",
+      "expected_failure": null,
+      "pages": [
+        {
+          "page": 1,
+          "width": 900,
+          "height": 500,
+          "lines": [
+            {
+              "id": "dense-1",
+              "text": "DENSE SMALL TEXT LINE ONE",
+              "polygon": [
+                [
+                  26,
+                  26
+                ],
+                [
+                  630,
+                  26
+                ],
+                [
+                  630,
+                  66
+                ],
+                [
+                  26,
+                  66
+                ]
+              ]
+            },
+            {
+              "id": "dense-2",
+              "text": "DENSE SMALL TEXT LINE TWO",
+              "polygon": [
+                [
+                  26,
+                  86
+                ],
+                [
+                  630,
+                  86
+                ],
+                [
+                  630,
+                  126
+                ],
+                [
+                  26,
+                  126
+                ]
+              ]
+            },
+            {
+              "id": "dense-3",
+              "text": "DENSE SMALL TEXT LINE THREE",
+              "polygon": [
+                [
+                  26,
+                  146
+                ],
+                [
+                  678,
+                  146
+                ],
+                [
+                  678,
+                  186
+                ],
+                [
+                  26,
+                  186
+                ]
+              ]
+            },
+            {
+              "id": "dense-4",
+              "text": "DENSE SMALL TEXT LINE FOUR",
+              "polygon": [
+                [
+                  26,
+                  206
+                ],
+                [
+                  654,
+                  206
+                ],
+                [
+                  654,
+                  246
+                ],
+                [
+                  26,
+                  246
+                ]
+              ]
+            },
+            {
+              "id": "dense-5",
+              "text": "DENSE SMALL TEXT LINE FIVE",
+              "polygon": [
+                [
+                  26,
+                  266
+                ],
+                [
+                  654,
+                  266
+                ],
+                [
+                  654,
+                  306
+                ],
+                [
+                  26,
+                  306
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "punctuation",
+      "file": "punctuation.png",
+      "kind": "punctuation",
+      "sha256": "sha256:d99f27a60ee20be088a7285e387276801ff06c1873aa7c66952905c50de7ac12",
+      "media_type": "image/png",
+      "expected_outcome": "accepted",
+      "expected_failure": null,
+      "pages": [
+        {
+          "page": 1,
+          "width": 900,
+          "height": 300,
+          "lines": [
+            {
+              "id": "punctuation-1",
+              "text": "WEIGHT 42 KG, SCORE 98.5%",
+              "polygon": [
+                [
+                  25,
+                  75
+                ],
+                [
+                  780,
+                  75
+                ],
+                [
+                  780,
+                  125
+                ],
+                [
+                  25,
+                  125
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "blank",
+      "file": "blank.png",
+      "kind": "blank",
+      "sha256": "sha256:63ef80bd23ad54b3e86b9a0a813c711932e2d1dba508ff576b93cd4b15093ae9",
+      "media_type": "image/png",
+      "expected_outcome": "rejected",
+      "expected_failure": "no_readable_content",
+      "pages": [
+        {
+          "page": 1,
+          "width": 600,
+          "height": 300,
+          "lines": []
+        }
+      ]
+    },
+    {
+      "id": "nontext",
+      "file": "nontext.png",
+      "kind": "nontext",
+      "sha256": "sha256:4cbbaa77169fce7f457deeef8b518813a0d7300c9c77fed523fa48c36bf3b455",
+      "media_type": "image/png",
+      "expected_outcome": "rejected",
+      "expected_failure": "no_readable_content",
+      "pages": [
+        {
+          "page": 1,
+          "width": 600,
+          "height": 300,
+          "lines": []
+        }
+      ]
+    },
+    {
+      "id": "mixed-pdf",
+      "file": "mixed.pdf",
+      "kind": "mixed-pdf",
+      "sha256": "sha256:4fe48ebe2e47b8d27de8e19cd0fb820f08e745be420576456d49af5dec62e31a",
+      "media_type": "application/pdf",
+      "expected_outcome": "accepted",
+      "expected_failure": null,
+      "pages": [
+        {
+          "page": 1,
+          "width": 600,
+          "height": 300,
+          "lines": [
+            {
+              "id": "mixed-1",
+              "text": "SCANNED PAGE TEXT",
+              "polygon": [
+                [
+                  42,
+                  78
+                ],
+                [
+                  468,
+                  78
+                ],
+                [
+                  468,
+                  122
+                ],
+                [
+                  42,
+                  122
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "page": 2,
+          "width": 600,
+          "height": 300,
+          "lines": [
+            {
+              "id": "mixed-2",
+              "text": "SECOND SCAN PAGE",
+              "polygon": [
+                [
+                  40,
+                  80
+                ],
+                [
+                  515,
+                  80
+                ],
+                [
+                  515,
+                  115
+                ],
+                [
+                  40,
+                  115
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "malformed-pdf",
+      "file": "malformed.pdf",
+      "kind": "malformed-pdf",
+      "sha256": "sha256:a5b85ea1e96d33e5a208c0af3a30b8e9dded6a2de44470f13ecad00994c24212",
+      "media_type": "application/pdf",
+      "expected_outcome": "rejected",
+      "expected_failure": "invalid_source",
+      "pages": []
+    },
+    {
+      "id": "encrypted-pdf",
+      "file": "encrypted.pdf",
+      "kind": "encrypted-pdf",
+      "sha256": "sha256:7d62a21519b1a70036ec2a5356369ebf97e80ec38839fb01f6f680f494b70586",
+      "media_type": "application/pdf",
+      "expected_outcome": "rejected",
+      "expected_failure": "encrypted_source",
+      "pages": []
+    },
+    {
+      "id": "oversized",
+      "file": "oversized.png",
+      "kind": "oversized",
+      "sha256": "sha256:1df261899a6ee24a575ffdd095550a4719aecf8c7b023363479661520b93a1a6",
+      "media_type": "image/png",
+      "expected_outcome": "rejected",
+      "expected_failure": "resource_limit",
+      "pages": []
+    },
+    {
+      "id": "decompression-bomb",
+      "file": "decompression-bomb.png",
+      "kind": "decompression-bomb",
+      "sha256": "sha256:424e4202ec2288296ddacb4f1295e241a714289b539ad30b89a763672de123b6",
+      "media_type": "image/png",
+      "expected_outcome": "rejected",
+      "expected_failure": "resource_limit",
+      "pages": []
+    },
+    {
+      "id": "excessive-pages",
+      "file": "excessive-pages.pdf",
+      "kind": "excessive-pages",
+      "sha256": "sha256:da2a061beeaf2ea4f196acb5da325343b48ec456142738d7215af8203db52b24",
+      "media_type": "application/pdf",
+      "expected_outcome": "rejected",
+      "expected_failure": "resource_limit",
+      "pages": []
+    }
+  ]
+}

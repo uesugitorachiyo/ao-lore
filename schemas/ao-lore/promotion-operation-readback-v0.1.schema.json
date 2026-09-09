@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "https://schemas.ao-lore.example/promotion-operation-readback-v0.1.schema.json",
+  "title": "AO Lore Promotion Operation Readback v0.1", "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "operation", "status", "promotion_id", "proposal_id", "authorization_id", "transaction_id", "generation_id", "result_digest", "reason_code", "retry_safe", "next_command"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.promotion-operation-readback.v0.1"}, "operation": {"enum": ["prepare", "apply", "inspect", "rollback", "recover"]},
+    "status": {"enum": ["prepared", "committed", "inspected", "rolled_back", "recovered", "no_op", "rejected", "investigate"]},
+    "promotion_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]}, "proposal_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]},
+    "authorization_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]}, "transaction_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]},
+    "generation_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]}, "result_digest": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/digest"}]},
+    "reason_code": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,63}$"}, "retry_safe": {"type": "boolean"},
+    "next_command": {"enum": ["none", "promotion apply", "promotion inspect", "promotion rollback", "promotion recover"]}
+  },
+  "$defs": {"id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"}, "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}
+}

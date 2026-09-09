@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/private-pdf-domain-review-v0.1.schema.json",
+  "title": "AO Lore Representative-Domain Private PDF Review v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "source_file": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 128,
+      "pattern": "^(?!/)(?!.*\\\\)(?!.*//)(?!.*(?:^|/)\\.{1,2}(?:/|$))[A-Za-z0-9._-]+\\.pdf$"
+    },
+    "expected_text": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 256
+      }
+    },
+    "required_block_types": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 9,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "heading",
+          "paragraph",
+          "list",
+          "table",
+          "code",
+          "image",
+          "caption",
+          "footnote",
+          "link"
+        ]
+      }
+    },
+    "domain_01": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["item_id", "source_file", "source_digest", "derived_digest", "page_count", "expected_text", "required_block_types"],
+      "properties": {
+        "item_id": {"const": "domain-01"},
+        "source_file": {"$ref": "#/$defs/source_file"},
+        "source_digest": {"$ref": "#/$defs/digest"},
+        "derived_digest": {"$ref": "#/$defs/digest"},
+        "page_count": {"const": 1},
+        "expected_text": {"$ref": "#/$defs/expected_text"},
+        "required_block_types": {"$ref": "#/$defs/required_block_types"}
+      }
+    },
+    "domain_02": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["item_id", "source_file", "source_digest", "derived_digest", "page_count", "expected_text", "required_block_types"],
+      "properties": {
+        "item_id": {"const": "domain-02"},
+        "source_file": {"$ref": "#/$defs/source_file"},
+        "source_digest": {"$ref": "#/$defs/digest"},
+        "derived_digest": {"$ref": "#/$defs/digest"},
+        "page_count": {"const": 2},
+        "expected_text": {"$ref": "#/$defs/expected_text"},
+        "required_block_types": {"$ref": "#/$defs/required_block_types"}
+      }
+    },
+    "domain_03": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["item_id", "source_file", "source_digest", "derived_digest", "page_count", "expected_text", "required_block_types"],
+      "properties": {
+        "item_id": {"const": "domain-03"},
+        "source_file": {"$ref": "#/$defs/source_file"},
+        "source_digest": {"$ref": "#/$defs/digest"},
+        "derived_digest": {"$ref": "#/$defs/digest"},
+        "page_count": {"const": 4},
+        "expected_text": {"$ref": "#/$defs/expected_text"},
+        "required_block_types": {"$ref": "#/$defs/required_block_types"}
+      }
+    },
+    "domain_04": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["item_id", "source_file", "source_digest", "derived_digest", "page_count", "expected_text", "required_block_types"],
+      "properties": {
+        "item_id": {"const": "domain-04"},
+        "source_file": {"$ref": "#/$defs/source_file"},
+        "source_digest": {"$ref": "#/$defs/digest"},
+        "derived_digest": {"$ref": "#/$defs/digest"},
+        "page_count": {"const": 10},
+        "expected_text": {"$ref": "#/$defs/expected_text"},
+        "required_block_types": {"$ref": "#/$defs/required_block_types"}
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "corpus_id",
+    "provenance",
+    "representative_domain",
+    "documents",
+    "parser_id",
+    "parser_version",
+    "ocr_enabled",
+    "provider_calls",
+    "promotion_authority",
+    "claims_authority_advance"
+  ],
+  "properties": {
+    "schema_version": {"const": "ao.lore.private-pdf-domain-review.v0.1"},
+    "corpus_id": {"const": "pdf-nomagic-uk-public-sector-v1"},
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dataset_id", "document_digest", "transformation_id"],
+      "properties": {
+        "dataset_id": {"const": "napierone-pdf-nomagic"},
+        "document_digest": {"const": "sha256:adbf22aeb0a01e677cadc3805687f21b30ac4e4c70ed7694cdb72afb8101be65"},
+        "transformation_id": {"const": "pdf-nomagic-restore-five-byte-header-v1"}
+      }
+    },
+    "representative_domain": {"const": true},
+    "documents": {
+      "$comment": "Runtime additionally rejects duplicate source files, source digests, derived digests, and globally duplicate text anchors, and rejects any source digest equal to its derived digest.",
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "prefixItems": [
+        {"$ref": "#/$defs/domain_01"},
+        {"$ref": "#/$defs/domain_02"},
+        {"$ref": "#/$defs/domain_03"},
+        {"$ref": "#/$defs/domain_04"}
+      ],
+      "items": false
+    },
+    "parser_id": {"const": "docling"},
+    "parser_version": {"const": "2.118.1"},
+    "ocr_enabled": {"const": false},
+    "provider_calls": {"const": false},
+    "promotion_authority": {"const": false},
+    "claims_authority_advance": {"const": false}
+  }
+}

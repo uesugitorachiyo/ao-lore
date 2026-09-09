@@ -1,0 +1,258 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/private-docx-expectation-v0.1.schema.json",
+  "title": "AO Lore Private DOCX Expectation v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "positive_integer": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "non_negative_integer": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "paragraphs",
+        "headings",
+        "lists",
+        "tables",
+        "rows",
+        "cells",
+        "links",
+        "footnotes",
+        "endnotes",
+        "drawings",
+        "media"
+      ],
+      "properties": {
+        "paragraphs": {
+          "$ref": "#/$defs/non_negative_integer"
+        },
+        "headings": {
+          "$ref": "#/$defs/non_negative_integer"
+        },
+        "lists": {
+          "$ref": "#/$defs/non_negative_integer"
+        },
+        "tables": {
+          "$ref": "#/$defs/non_negative_integer"
+        },
+        "rows": {
+          "$ref": "#/$defs/non_negative_integer"
+        },
+        "cells": {
+          "$ref": "#/$defs/non_negative_integer"
+        },
+        "links": {
+          "$ref": "#/$defs/non_negative_integer"
+        },
+        "footnotes": {
+          "$ref": "#/$defs/non_negative_integer"
+        },
+        "endnotes": {
+          "$ref": "#/$defs/non_negative_integer"
+        },
+        "drawings": {
+          "$ref": "#/$defs/non_negative_integer"
+        },
+        "media": {
+          "$ref": "#/$defs/non_negative_integer"
+        }
+      }
+    },
+    "accept_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "item_id",
+        "source_digest",
+        "derived_digest",
+        "source_bytes",
+        "derived_bytes",
+        "transformation_id",
+        "package_inventory_digest",
+        "normalized_text_digest",
+        "structural_event_digest",
+        "counts",
+        "expected_outcome",
+        "expected_rejection",
+        "page_count",
+        "page_count_reason"
+      ],
+      "properties": {
+        "item_id": {
+          "type": "string",
+          "pattern": "^docx-\\d{4}$"
+        },
+        "source_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "derived_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "source_bytes": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "derived_bytes": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "transformation_id": {
+          "const": "restore-ooxml-local-header-v1"
+        },
+        "package_inventory_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "normalized_text_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "structural_event_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "counts": {
+          "$ref": "#/$defs/counts"
+        },
+        "expected_outcome": {
+          "const": "accept"
+        },
+        "expected_rejection": {
+          "type": "null"
+        },
+        "page_count": {
+          "type": "null"
+        },
+        "page_count_reason": {
+          "const": "ooxml-pagination-unavailable"
+        }
+      }
+    },
+    "reject_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "item_id",
+        "source_digest",
+        "derived_digest",
+        "source_bytes",
+        "derived_bytes",
+        "transformation_id",
+        "package_inventory_digest",
+        "normalized_text_digest",
+        "structural_event_digest",
+        "counts",
+        "expected_outcome",
+        "expected_rejection",
+        "page_count",
+        "page_count_reason"
+      ],
+      "properties": {
+        "item_id": {
+          "type": "string",
+          "pattern": "^docx-\\d{4}$"
+        },
+        "source_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "derived_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "source_bytes": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "derived_bytes": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "transformation_id": {
+          "const": "restore-ooxml-local-header-v1"
+        },
+        "package_inventory_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "normalized_text_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "structural_event_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "counts": {
+          "$ref": "#/$defs/counts"
+        },
+        "expected_outcome": {
+          "const": "reject"
+        },
+        "expected_rejection": {
+          "enum": [
+            "invalid-package",
+            "active-content"
+          ]
+        },
+        "page_count": {
+          "type": "null"
+        },
+        "page_count_reason": {
+          "const": "ooxml-pagination-unavailable"
+        }
+      }
+    },
+    "item": {
+      "$comment": "Runtime additionally enforces exact built-in JSON types, the exact docx-0001 through docx-0100 order, and source_digest != derived_digest.",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/accept_item"
+        },
+        {
+          "$ref": "#/$defs/reject_item"
+        }
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "corpus_id",
+    "items",
+    "ocr_enabled",
+    "network_accessed",
+    "provider_calls",
+    "promotion_authority",
+    "claims_authority_advance"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ao.lore.private-docx-expectation.v0.1"
+    },
+    "corpus_id": {
+      "const": "docx-nomagic-uk-public-sector-v1"
+    },
+    "items": {
+      "type": "array",
+      "minItems": 100,
+      "maxItems": 100,
+      "items": {
+        "$ref": "#/$defs/item"
+      }
+    },
+    "ocr_enabled": {
+      "const": false
+    },
+    "network_accessed": {
+      "const": false
+    },
+    "provider_calls": {
+      "const": false
+    },
+    "promotion_authority": {
+      "const": false
+    },
+    "claims_authority_advance": {
+      "const": false
+    }
+  }
+}

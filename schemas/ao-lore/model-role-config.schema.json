@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/model-role-config.schema.json",
+  "title": "AO Lore Model Role Configuration v0.1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "role", "adapter", "provider", "model_id", "policy_version", "output_schema_version", "context_limit", "output_limit", "temperature", "timeout_ms", "retries", "network_policy", "privacy_policy", "token_budget", "monetary_budget", "fallback_policy", "cache_policy", "no_implicit_cross_role_inheritance"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.model-role-config.v0.1"}, "role": {"enum": ["parser", "distiller", "navigator", "synthesizer"]},
+    "adapter": {"type": "string"}, "provider": {"type": "string"}, "endpoint": {"type": ["string", "null"]}, "model_id": {"type": "string"},
+    "policy_version": {"type": "string"}, "output_schema_version": {"type": "string"},
+    "context_limit": {"type": "integer", "minimum": 1}, "output_limit": {"type": "integer", "minimum": 1},
+    "temperature": {"type": "number", "minimum": 0, "maximum": 2}, "decoding_controls": {"type": "object", "additionalProperties": true},
+    "timeout_ms": {"type": "integer", "minimum": 1}, "retries": {"type": "integer", "minimum": 0},
+    "network_policy": {"enum": ["offline", "allowlisted_frontier"]}, "privacy_policy": {"type": "string", "minLength": 1},
+    "credential_environment_variable": {"type": ["string", "null"]}, "token_budget": {"type": "integer", "minimum": 0},
+    "monetary_budget": {"type": "number", "minimum": 0}, "fallback_policy": {"type": "object", "additionalProperties": false, "required": ["enabled", "adapters"], "properties": {"enabled": {"type": "boolean"}, "adapters": {"type": "array", "items": {"type": "string"}}}},
+    "cache_policy": {"type": "object", "additionalProperties": false, "required": ["enabled", "ttl_seconds"], "properties": {"enabled": {"type": "boolean"}, "ttl_seconds": {"type": "integer", "minimum": 0}}},
+    "no_implicit_cross_role_inheritance": {"const": true}
+  }
+}

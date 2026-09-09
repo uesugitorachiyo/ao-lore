@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/parser-selection-report.schema.json",
+  "title": "AO Lore Parser Selection Report v0.1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "document_digest", "weight_profile", "eligible_parsers", "rejected_parsers", "candidates", "selected_parser", "tie_break", "benchmark_evidence"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.parser-selection-report.v0.1"},
+    "document_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "weight_profile": {"type": "string", "minLength": 1},
+    "eligible_parsers": {"type": "array", "items": {"type": "string"}},
+    "rejected_parsers": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["parser_id", "reasons"], "properties": {"parser_id": {"type": "string"}, "reasons": {"type": "array", "minItems": 1, "items": {"type": "string"}}}}},
+    "candidates": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["parser_id", "normalized_components", "selection_score"], "properties": {"parser_id": {"type": "string"}, "normalized_components": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0, "maximum": 1}}, "selection_score": {"type": "number"}}}},
+    "selected_parser": {"type": "string", "minLength": 1},
+    "tie_break": {"type": "object", "additionalProperties": false, "required": ["applied", "reason"], "properties": {"applied": {"type": "boolean"}, "reason": {"type": "string"}}},
+    "benchmark_evidence": {"type": "array", "items": {"type": "string"}}
+  }
+}

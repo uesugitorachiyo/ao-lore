@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/evidence-selection-inspection-v0.1.schema.json",
+  "title": "AO Lore Evidence Selection Inspection v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "proposal_id",
+    "proposal_digest",
+    "authorization_id",
+    "transaction_id",
+    "candidate_id",
+    "status",
+    "reason_code",
+    "inspection_digest",
+    "candidate_creation",
+    "legal_advice",
+    "property_decision",
+    "candidate_review",
+    "candidate_decision",
+    "promotion",
+    "canonical_query",
+    "provider",
+    "credential",
+    "private_data",
+    "publication",
+    "release",
+    "deployment",
+    "authority_advanced"
+  ],
+  "properties": {
+    "schema_version": {"const": "ao.lore.evidence-selection-inspection.v0.1"},
+    "proposal_id": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"}
+      ]
+    },
+    "proposal_digest": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      ]
+    },
+    "authorization_id": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"}
+      ]
+    },
+    "transaction_id": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"}
+      ]
+    },
+    "candidate_id": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"}
+      ]
+    },
+    "status": {
+      "enum": ["prepared", "authorized", "committed", "expired", "investigate"]
+    },
+    "reason_code": {"type": "string", "minLength": 1, "maxLength": 64},
+    "inspection_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "candidate_creation": {"const": false},
+    "legal_advice": {"const": false},
+    "property_decision": {"const": false},
+    "candidate_review": {"const": false},
+    "candidate_decision": {"const": false},
+    "promotion": {"const": false},
+    "canonical_query": {"const": false},
+    "provider": {"const": false},
+    "credential": {"const": false},
+    "private_data": {"const": false},
+    "publication": {"const": false},
+    "release": {"const": false},
+    "deployment": {"const": false},
+    "authority_advanced": {"const": false}
+  }
+}

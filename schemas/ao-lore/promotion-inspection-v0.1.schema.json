@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "https://schemas.ao-lore.example/promotion-inspection-v0.1.schema.json",
+  "title": "AO Lore Promotion Inspection v0.1", "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "promotion_id", "status", "operation", "proposal_digest", "authorization_id", "authorization_digest", "transaction_id", "transaction_digest", "generation_id", "generation_manifest_digest", "recovery_classification", "audit_head_digest", "canonical_state_valid", "retry_safe", "next_command"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.promotion-inspection.v0.1"}, "promotion_id": {"$ref": "#/$defs/id"},
+    "status": {"enum": ["prepared", "reserved", "committed", "rolled_back", "recovery_pending", "corrupt", "not_found"]}, "operation": {"oneOf": [{"type": "null"}, {"enum": ["apply", "rollback"]}]},
+    "proposal_digest": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/digest"}]}, "authorization_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]}, "authorization_digest": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/digest"}]},
+    "transaction_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]},
+    "transaction_digest": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/digest"}]}, "generation_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]},
+    "generation_manifest_digest": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/digest"}]}, "recovery_classification": {"enum": ["no_op", "resume", "complete", "investigate"]},
+    "audit_head_digest": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/digest"}]}, "canonical_state_valid": {"type": "boolean"}, "retry_safe": {"type": "boolean"},
+    "next_command": {"enum": ["none", "promotion apply", "promotion inspect", "promotion rollback", "promotion recover"]}
+  },
+  "$defs": {"id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"}, "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}
+}

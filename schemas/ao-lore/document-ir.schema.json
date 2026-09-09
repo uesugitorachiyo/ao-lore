@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/document-ir.schema.json",
+  "title": "AO Lore Canonical Document IR v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "document_id", "source", "blocks", "metadata"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.document-ir.v0.1"},
+    "document_id": {"type": "string", "pattern": "^(?:sha256:[0-9a-f]{64}|[a-z0-9][a-z0-9._-]{0,127})$"},
+    "source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["resource", "digest", "media_type"],
+      "properties": {
+        "resource": {"type": "string", "minLength": 1},
+        "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "media_type": {"type": "string", "minLength": 1}
+      }
+    },
+    "parser": {
+      "type": "object", "additionalProperties": false,
+      "required": ["parser_id", "parser_version", "configuration_digest"],
+      "properties": {
+        "parser_id": {"type": "string", "minLength": 1},
+        "parser_version": {"type": "string", "minLength": 1},
+        "configuration_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "blocks": {"type": "array", "items": {"$ref": "#/$defs/block"}},
+    "metadata": {"type": "object", "additionalProperties": true}
+  },
+  "$defs": {
+    "span": {
+      "type": "object", "additionalProperties": false,
+      "required": ["start", "end"],
+      "properties": {
+        "page": {"type": "integer", "minimum": 1},
+        "start": {"type": "integer", "minimum": 0},
+        "end": {"type": "integer", "minimum": 0},
+        "coordinates": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "number"}}
+      }
+    },
+    "block": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "type", "text", "source_span"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "type": {"enum": ["heading", "paragraph", "list", "table", "code", "image", "caption", "footnote", "link"]},
+        "text": {"type": "string"},
+        "level": {"type": "integer", "minimum": 1},
+        "source_span": {"$ref": "#/$defs/span"},
+        "attributes": {"type": "object", "additionalProperties": true},
+        "children": {"type": "array", "items": {"$ref": "#/$defs/block"}}
+      }
+    }
+  }
+}

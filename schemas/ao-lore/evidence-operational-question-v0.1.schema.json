@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "https://schemas.ao-lore.example/evidence-operational-question-v0.1.schema.json",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "question_id", "prompt", "expected_outcome", "required_authority_roles", "required_evidence_ids", "forbidden_evidence_ids", "qualifications", "question_digest"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.evidence-operational-question.v0.1"}, "question_id": {"$ref": "#/$defs/id"}, "prompt": {"$ref": "#/$defs/public_text_1024"},
+    "expected_outcome": {"enum": ["answer", "partial", "refuse", "investigate"]},
+    "required_authority_roles": {"type": "array", "minItems": 0, "maxItems": 6, "uniqueItems": true, "items": {"$ref": "#/$defs/role"}},
+    "required_evidence_ids": {"$ref": "#/$defs/evidence_ids"}, "forbidden_evidence_ids": {"$ref": "#/$defs/evidence_ids"},
+    "qualifications": {"type": "array", "minItems": 0, "maxItems": 16, "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 512, "pattern": "^(?!.*[\\u0000-\\u001f])(?!/|[Ff][Ii][Ll][Ee]:)(?!.*(?:/[Hh][Oo][Mm][Ee]/|/[Oo][Pp][Tt]/|\\\\)).+$"}}, "question_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"}, "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "public_text_1024": {"type": "string", "minLength": 1, "maxLength": 1024, "pattern": "^(?!.*[\\u0000-\\u001f])(?!/|[Ff][Ii][Ll][Ee]:)(?!.*(?:/[Hh][Oo][Mm][Ee]/|/[Oo][Pp][Tt]/|\\\\)).+$"},
+    "role": {"enum": ["primary_law", "official_interpretation", "local_enforcement_guidance", "technical_guidance", "operator_procedure", "case_evidence"]},
+    "evidence_ids": {"type": "array", "minItems": 0, "maxItems": 64, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}}
+  }
+}

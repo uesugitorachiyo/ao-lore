@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "https://schemas.ao-lore.example/promotion-recovery-event-v0.1.schema.json",
+  "title": "AO Lore Promotion Recovery Event v0.1", "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "sequence", "transaction_id", "transaction_intent_digest", "promotion_id", "operation", "phase", "classification", "action", "generation_id", "previous_event_digest", "recorded_at", "event_digest"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.promotion-recovery-event.v0.1"}, "sequence": {"type": "integer", "minimum": 1, "maximum": 100000},
+    "transaction_id": {"$ref": "#/$defs/id"}, "transaction_intent_digest": {"$ref": "#/$defs/digest"}, "promotion_id": {"$ref": "#/$defs/id"}, "operation": {"enum": ["apply", "rollback"]},
+    "phase": {"enum": ["authorized", "staged", "generation_published", "terminal"]}, "classification": {"enum": ["no_op", "resume", "complete", "investigate"]},
+    "action": {"enum": ["none", "create_intent", "reconstruct_staging", "quarantine_staging", "publish_generation", "complete_evidence", "preserve_for_investigation"]},
+    "generation_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]}, "previous_event_digest": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/digest"}]},
+    "recorded_at": {"$ref": "#/$defs/time"}, "event_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {"id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"}, "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}, "time": {"type": "string", "format": "date-time", "maxLength": 32}}
+}

@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/okf-canonical-entry-v0.2.schema.json",
+  "title": "AO Lore Canonical OKF Entry v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "policy_version", "canonical_entry_id", "semantic_key", "candidate_id", "candidate_digest", "document_ir_digest", "source_digest", "provenance_digest", "parser", "accepted_review_head_digest", "concepts", "claim_mappings", "links"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.okf-canonical-entry.v0.2"},
+    "policy_version": {"const": "ao.lore.promotion-policy.v0.1"},
+    "canonical_entry_id": {"$ref": "#/$defs/id"},
+    "semantic_key": {"$ref": "#/$defs/digest"},
+    "candidate_id": {"$ref": "#/$defs/id"},
+    "candidate_digest": {"$ref": "#/$defs/digest"},
+    "document_ir_digest": {"$ref": "#/$defs/digest"},
+    "source_digest": {"$ref": "#/$defs/digest"},
+    "provenance_digest": {"$ref": "#/$defs/digest"},
+    "parser": {
+      "type": "object", "additionalProperties": false,
+      "required": ["parser_id", "parser_version"],
+      "properties": {"parser_id": {"$ref": "#/$defs/id"}, "parser_version": {"$ref": "#/$defs/text"}}
+    },
+    "accepted_review_head_digest": {"$ref": "#/$defs/digest"},
+    "concepts": {"type": "array", "maxItems": 10000, "items": {"$ref": "#/$defs/concept"}},
+    "claim_mappings": {"type": "array", "maxItems": 10000, "items": {"$ref": "#/$defs/claim"}},
+    "links": {"type": "array", "maxItems": 10000, "items": {"$ref": "#/$defs/link"}}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "text": {"type": "string", "minLength": 1, "maxLength": 256},
+    "id_list": {"type": "array", "maxItems": 10000, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "concept": {
+      "type": "object", "additionalProperties": false,
+      "required": ["candidate_concept_id", "title", "source_block_ids", "status"],
+      "properties": {
+        "candidate_concept_id": {"$ref": "#/$defs/id"}, "title": {"$ref": "#/$defs/text"},
+        "source_block_ids": {"$ref": "#/$defs/id_list"}, "status": {"const": "proposed"},
+        "candidate_claim_ids": {"$ref": "#/$defs/id_list"}
+      }
+    },
+    "claim": {
+      "type": "object", "additionalProperties": false, "required": ["claim_id", "block_ids"],
+      "properties": {"claim_id": {"$ref": "#/$defs/id"}, "block_ids": {"$ref": "#/$defs/id_list"}}
+    },
+    "link": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source_block_id", "label", "target", "status"],
+      "properties": {"source_block_id": {"$ref": "#/$defs/id"}, "label": {"type": "string", "maxLength": 256}, "target": {"type": "string", "maxLength": 256}, "status": {"const": "proposed"}}
+    }
+  }
+}

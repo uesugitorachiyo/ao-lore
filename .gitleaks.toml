@@ -1,0 +1,10 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Exact inert fake credential used by the public-safety scanner regression"
+regexTarget = "match"
+regexes = [
+  '''AWS_SECRET_ACCESS_KEY=ABCDEFGHIJ(?:KLMNOPQRSTUVWXYZ1234567890ABCD)''',
+  '''PROVENANCE_V0_2_KEYS = PROVENANCE_V0_1_KEYS'''
+]

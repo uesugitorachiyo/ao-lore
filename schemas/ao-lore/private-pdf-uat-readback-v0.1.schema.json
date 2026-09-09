@@ -1,0 +1,492 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/private-pdf-uat-readback-v0.1.schema.json",
+  "title": "AO Lore Private PDF UAT Readback v0.1",
+  "$comment": "Path-free terminal private readback plus explicit not_supplied absence. Runtime also enforces count arithmetic, conversion totals, duplicate identity rejection, unchanged brain digests, and ordered results bound to the caller-supplied validated manifest item sequence without path-like output cells or lexical ordering.",
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "metric_name": {
+      "enum": [
+        "structural_fidelity",
+        "text_fidelity",
+        "source_location_fidelity"
+      ]
+    },
+    "score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "minimum",
+        "maximum",
+        "mean"
+      ],
+      "properties": {
+        "minimum": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maximum": {
+          "type": "number",
+          "minimum": 0
+        },
+        "mean": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total",
+        "created",
+        "unchanged",
+        "rejected",
+        "processed",
+        "successful",
+        "candidate_queue",
+        "interrupted",
+        "resumed",
+        "rerun"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "created": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "unchanged": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "rejected": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "processed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "successful": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "candidate_queue": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "interrupted": {
+          "const": 1
+        },
+        "resumed": {
+          "const": 1
+        },
+        "rerun": {
+          "const": 1
+        }
+      }
+    },
+    "conversion_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "initial",
+        "resumed",
+        "rerun"
+      ],
+      "properties": {
+        "initial": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "resumed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "rerun": {
+          "const": 0
+        }
+      }
+    },
+    "success_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "item_id",
+        "source_digest",
+        "status",
+        "candidate_id",
+        "candidate_digest",
+        "provenance_digest",
+        "review_status"
+      ],
+      "properties": {
+        "item_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "source_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "status": {
+          "enum": [
+            "created",
+            "unchanged"
+          ]
+        },
+        "candidate_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "candidate_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "provenance_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "review_status": {
+          "enum": [
+            "unreviewed",
+            "accepted",
+            "rejected"
+          ]
+        }
+      }
+    },
+    "rejected_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "item_id",
+        "source_digest",
+        "status",
+        "error_code"
+      ],
+      "properties": {
+        "item_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "source_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "status": {
+          "const": "rejected"
+        },
+        "error_code": {
+          "enum": [
+            "conversion_failed",
+            "digest_mismatch",
+            "encrypted_document",
+            "invalid_pdf",
+            "no_readable_content"
+          ]
+        }
+      }
+    },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "metrics",
+        "exclusions",
+        "stable_failures",
+        "latency_seconds",
+        "peak_memory_bytes",
+        "repeatability"
+      ],
+      "properties": {
+        "metrics": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "structural_fidelity": {
+              "$ref": "#/$defs/score"
+            },
+            "text_fidelity": {
+              "$ref": "#/$defs/score"
+            },
+            "source_location_fidelity": {
+              "$ref": "#/$defs/score"
+            }
+          }
+        },
+        "exclusions": {
+          "type": "array",
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/metric_name"
+          }
+        },
+        "stable_failures": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "conversion_failed",
+            "digest_mismatch",
+            "encrypted_document",
+            "invalid_pdf",
+            "no_readable_content"
+          ],
+          "properties": {
+            "conversion_failed": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 20
+            },
+            "digest_mismatch": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 20
+            },
+            "encrypted_document": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 20
+            },
+            "invalid_pdf": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 20
+            },
+            "no_readable_content": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 20
+            }
+          }
+        },
+        "latency_seconds": {
+          "$ref": "#/$defs/summary"
+        },
+        "peak_memory_bytes": {
+          "$ref": "#/$defs/summary"
+        },
+        "repeatability": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "runs",
+            "identical",
+            "score"
+          ],
+          "properties": {
+            "runs": {
+              "type": "integer",
+              "minimum": 2,
+              "maximum": 20
+            },
+            "identical": {
+              "type": "boolean"
+            },
+            "score": {
+              "$ref": "#/$defs/score"
+            }
+          }
+        }
+      }
+    },
+    "not_supplied": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "lifecycle_status",
+        "qualified",
+        "ocr_used",
+        "provider_calls",
+        "promotion_authority",
+        "claims_authority_advance"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "ao.lore.private-pdf-uat-readback.v0.1"
+        },
+        "lifecycle_status": {
+          "const": "not_supplied"
+        },
+        "qualified": {
+          "const": false
+        },
+        "ocr_used": {
+          "const": false
+        },
+        "provider_calls": {
+          "const": false
+        },
+        "promotion_authority": {
+          "const": false
+        },
+        "claims_authority_advance": {
+          "const": false
+        }
+      }
+    },
+    "terminal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "corpus_id",
+        "corpus_digest",
+        "configuration_digest",
+        "qualification_digest",
+        "aggregate_digest",
+        "uat_digest",
+        "campaign_origin_digest",
+        "lifecycle_status",
+        "tuning_decision",
+        "qualified",
+        "counts",
+        "conversion_counts",
+        "brain_before_digest",
+        "brain_after_digest",
+        "results",
+        "aggregate",
+        "ocr_enabled",
+        "ocr_used",
+        "network_accessed",
+        "provider_calls",
+        "promotion_authority",
+        "claims_authority_advance"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "ao.lore.private-pdf-uat-readback.v0.1"
+        },
+        "corpus_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "corpus_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "configuration_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "qualification_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "aggregate_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "uat_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "campaign_origin_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "lifecycle_status": {
+          "enum": [
+            "completed",
+            "partial"
+          ]
+        },
+        "tuning_decision": {
+          "enum": [
+            "hold",
+            "candidate_change",
+            "investigate"
+          ]
+        },
+        "qualified": {
+          "const": false
+        },
+        "counts": {
+          "$ref": "#/$defs/counts"
+        },
+        "conversion_counts": {
+          "$ref": "#/$defs/conversion_counts"
+        },
+        "brain_before_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "brain_after_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "results": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/success_item"
+              },
+              {
+                "$ref": "#/$defs/rejected_item"
+              }
+            ]
+          }
+        },
+        "aggregate": {
+          "$ref": "#/$defs/aggregate"
+        },
+        "ocr_enabled": {
+          "const": false
+        },
+        "ocr_used": {
+          "const": false
+        },
+        "network_accessed": {
+          "const": false
+        },
+        "provider_calls": {
+          "const": false
+        },
+        "promotion_authority": {
+          "const": false
+        },
+        "claims_authority_advance": {
+          "const": false
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "tuning_decision": { "const": "candidate_change" }
+            },
+            "required": ["tuning_decision"]
+          },
+          "then": {
+            "properties": {
+              "corpus_id": { "const": "pdf-nomagic-uk-public-sector-v1" }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/not_supplied"
+    },
+    {
+      "$ref": "#/$defs/terminal"
+    }
+  ]
+}

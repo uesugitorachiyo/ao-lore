@@ -1,0 +1,26 @@
+{
+  "schema_version": "ao.lore.knowledge-rehearsal-fixture-spec.v0.1",
+  "candidates": [
+    {
+      "candidate_id": "candidate-answerable",
+      "version": "v0.2",
+      "claim": "Canonical rehearsal policy is enabled.",
+      "citation": "Public fixture policy record.",
+      "stale_after": null
+    },
+    {
+      "candidate_id": "candidate-legacy",
+      "version": "v0.1"
+    },
+    {
+      "candidate_id": "candidate-stale",
+      "version": "v0.2",
+      "claim": "Canonical rehearsal archive is available.",
+      "citation": "Public fixture archive record.",
+      "stale_after": "2000-01-01T00:00:00Z"
+    }
+  ],
+  "public_safe": true,
+  "live_authorization": false,
+  "network_authority": false
+}

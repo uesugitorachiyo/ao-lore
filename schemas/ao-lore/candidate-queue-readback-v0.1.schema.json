@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/candidate-queue-readback-v0.1.schema.json",
+  "title": "AO Lore Candidate Queue Readback v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "queue_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version", "candidate_id", "candidate_digest",
+        "provenance_digest", "created_at", "source_digest", "parser_id",
+        "parser_version", "review_status", "verified_review_events",
+        "latest_event_digest", "canonical", "promotion_authority"
+      ],
+      "properties": {
+        "schema_version": {"const": "ao.lore.candidate-queue-item.v0.1"},
+        "candidate_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"},
+        "candidate_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "provenance_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "created_at": {"type": "string", "format": "date-time"},
+        "source_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "parser_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"},
+        "parser_version": {"type": "string", "minLength": 1, "maxLength": 128},
+        "review_status": {"type": "string", "enum": ["unreviewed", "accepted", "rejected"]},
+        "verified_review_events": {"type": "integer", "minimum": 0, "maximum": 999999},
+        "latest_event_digest": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+          ]
+        },
+        "canonical": {"const": false},
+        "promotion_authority": {"const": false}
+      }
+    }
+  },
+  "required": [
+    "schema_version", "requested_status", "limit", "after",
+    "returned_count", "items", "next_after", "canonical",
+    "promotion_authority"
+  ],
+  "properties": {
+    "schema_version": {"const": "ao.lore.candidate-queue-readback.v0.1"},
+    "requested_status": {"type": "string", "enum": ["unreviewed", "accepted", "rejected", "all"]},
+    "limit": {"type": "integer", "minimum": 1, "maximum": 200},
+    "after": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"}
+      ]
+    },
+    "returned_count": {"type": "integer", "minimum": 0, "maximum": 200},
+    "items": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {"$ref": "#/$defs/queue_item"}
+    },
+    "next_after": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"}
+      ]
+    },
+    "canonical": {"const": false},
+    "promotion_authority": {"const": false}
+  }
+}

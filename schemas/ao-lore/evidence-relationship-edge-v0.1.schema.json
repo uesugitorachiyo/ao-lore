@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "https://schemas.ao-lore.example/evidence-relationship-edge-v0.1.schema.json",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "edge_id", "edge_type", "source_kind", "source_id", "source_evidence_digest", "target_kind", "target_id", "target_evidence_digest", "supporting_excerpt_digest", "reason_code", "qualification", "edge_digest"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.evidence-relationship-edge.v0.1"}, "edge_id": {"$ref": "#/$defs/id"},
+    "edge_type": {"enum": ["cites", "defines", "explains", "implements", "applies_locally_to", "provides_remediation_for", "requires_record_of", "qualifies", "supersedes", "effective_from", "conflicts_with"]},
+    "source_kind": {"enum": ["source", "claim", "workflow"]}, "source_id": {"$ref": "#/$defs/id"}, "source_evidence_digest": {"$ref": "#/$defs/digest"},
+    "target_kind": {"enum": ["source", "claim", "workflow"]}, "target_id": {"$ref": "#/$defs/id"}, "target_evidence_digest": {"$ref": "#/$defs/digest"},
+    "supporting_excerpt_digest": {"$ref": "#/$defs/digest"},
+    "reason_code": {"enum": ["source_citation", "statutory_definition", "official_explanation", "workflow_implementation", "local_application", "technical_remediation", "recordkeeping_requirement", "scope_qualification", "version_transition", "documented_conflict"]},
+    "qualification": {"oneOf": [{"type": "null"}, {"type": "string", "minLength": 1, "maxLength": 512, "pattern": "^(?!.*[\\u0000-\\u001f])(?!/|[Ff][Ii][Ll][Ee]:)(?!.*(?:/[Hh][Oo][Mm][Ee]/|/[Oo][Pp][Tt]/|\\\\)).+$"}]}, "edge_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {"id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"}, "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}
+}

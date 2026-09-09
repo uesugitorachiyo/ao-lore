@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/parser-capability-profile.schema.json",
+  "title": "AO Lore Parser Capability Profile v0.1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema_version", "parser_id", "parser_version", "formats", "document_ir_versions", "benchmark_refs"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.parser-capability-profile.v0.1"},
+    "parser_id": {"type": "string", "minLength": 1},
+    "parser_version": {"type": "string", "minLength": 1},
+    "formats": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": true,
+        "required": ["mime_types", "extensions", "structural_elements", "native_status", "ocr", "layout_aware", "tables", "links", "footnotes", "source_coordinates", "images", "captions", "languages"],
+        "properties": {
+          "mime_types": {"type": "array", "items": {"type": "string"}},
+          "extensions": {"type": "array", "items": {"type": "string", "pattern": "^\\.[A-Za-z0-9]+$"}},
+          "structural_elements": {"type": "array", "items": {"type": "string"}},
+          "native_status": {"enum": ["native", "fallback"]},
+          "ocr": {"type": "boolean"}, "layout_aware": {"type": "boolean"},
+          "tables": {"type": "boolean"}, "links": {"type": "boolean"},
+          "footnotes": {"type": "boolean"}, "source_coordinates": {"type": "boolean"},
+          "images": {"type": "boolean"}, "captions": {"type": "boolean"},
+          "languages": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "deterministic_offline": {"type": "boolean"},
+    "frontier_service_required": {"type": "boolean"},
+    "latency_class": {"enum": ["low", "medium", "high", "unknown"]},
+    "memory_class": {"enum": ["low", "medium", "high", "unknown"]},
+    "monetary_cost_class": {"enum": ["none", "low", "medium", "high", "unknown"]},
+    "sandbox_requirements": {"type": "array", "items": {"type": "string"}},
+    "security_requirements": {"type": "array", "items": {"type": "string"}},
+    "license_constraints": {"type": "array", "items": {"type": "string"}},
+    "document_ir_versions": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "benchmark_refs": {"type": "array", "items": {"type": "string"}}
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/comparison-v0.1.schema.json",
+  "title": "AO Lore deterministic comparison report v0.1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "evaluation_id", "metric_weights_basis_points", "pairs", "baseline_system_id", "challenger_system_id", "baseline_total", "challenger_total", "winner", "result", "authority"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.evaluation-comparison.v0.1"},
+    "evaluation_id": {"type": "string"},
+    "metric_weights_basis_points": {"type": "object"},
+    "pairs": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["format", "fixture_corpus_sha256", "workload_profile_sha256", "source_input_sha256", "baseline", "challenger", "winner", "result"],
+        "properties": {
+          "format": {"enum": ["pdf", "markdown", "html", "docx", "text", "image"]},
+          "fixture_corpus_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "workload_profile_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "source_input_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "baseline": {"type": "object"},
+          "challenger": {"type": "object"},
+          "winner": {"type": "string"},
+          "result": {"enum": ["baseline_win", "challenger_win", "tie"]}
+        }
+      }
+    },
+    "baseline_system_id": {"type": "string"},
+    "challenger_system_id": {"type": "string"},
+    "baseline_total": {"type": "integer", "minimum": 0},
+    "challenger_total": {"type": "integer", "minimum": 0},
+    "winner": {"type": "string"},
+    "result": {"enum": ["win", "tie"]},
+    "authority": {"const": "evaluation-evidence-only"}
+  }
+}

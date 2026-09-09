@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/private-ocr-model-set-v0.1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "policy_digest", "candidates", "page_orientation_model_digest", "text_line_orientation_model_digest", "network_accessed", "provider_calls", "promotion", "publication", "release", "deployment", "authority_advanced"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.private-ocr-model-set.v0.1"},
+    "policy_digest": {"const": "sha256:fe17335189fcf75471d0adb3251e14a34c7e16cb66071e90361e50d77b6c7e20"},
+    "candidates": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"$ref": "#/$defs/candidate"}},
+    "page_orientation_model_digest": {"$ref": "#/$defs/digest"},
+    "text_line_orientation_model_digest": {"$ref": "#/$defs/digest"},
+    "network_accessed": {"const": false}, "provider_calls": {"const": false},
+    "promotion": {"const": false}, "publication": {"const": false},
+    "release": {"const": false}, "deployment": {"const": false},
+    "authority_advanced": {"const": false}
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "candidate": {
+      "type": "object", "additionalProperties": false,
+      "required": ["candidate_id", "detection_model", "recognition_model", "model_set_digest"],
+      "properties": {
+        "candidate_id": {"enum": ["candidate-1", "candidate-2", "candidate-3"]},
+        "detection_model": {"enum": ["PP-OCRv6_medium_det", "PP-OCRv6_small_det", "PP-OCRv5_mobile_det"]},
+        "recognition_model": {"enum": ["PP-OCRv6_medium_rec", "PP-OCRv6_small_rec", "en_PP-OCRv5_mobile_rec"]},
+        "model_set_digest": {"$ref": "#/$defs/digest"}
+      }
+    }
+  }
+}

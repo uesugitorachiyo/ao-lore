@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "https://schemas.ao-lore.example/workspace-document-ingest-readback-v0.1.schema.json",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "ingest_id", "workspace_id", "status", "document_id", "source_digest", "document_ir_digest", "generation_id", "generation_digest", "readback_digest", "legal_advice", "property_decision", "candidate_review", "candidate_decision", "promotion", "canonical_query", "provider", "credential", "private_data", "publication", "release", "deployment", "authority_advanced"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.workspace-document-ingest-readback.v0.1"}, "ingest_id": {"$ref": "#/$defs/id"}, "workspace_id": {"$ref": "#/$defs/id"}, "status": {"enum": ["published", "unchanged"]}, "document_id": {"$ref": "#/$defs/document_id"}, "source_digest": {"$ref": "#/$defs/digest"}, "document_ir_digest": {"$ref": "#/$defs/digest"}, "generation_id": {"$ref": "#/$defs/id"}, "generation_digest": {"$ref": "#/$defs/digest"}, "readback_digest": {"$ref": "#/$defs/digest"},
+    "legal_advice": {"const": false}, "property_decision": {"const": false}, "candidate_review": {"const": false}, "candidate_decision": {"const": false}, "promotion": {"const": false}, "canonical_query": {"const": false}, "provider": {"const": false}, "credential": {"const": false}, "private_data": {"const": false}, "publication": {"const": false}, "release": {"const": false}, "deployment": {"const": false}, "authority_advanced": {"const": false}
+  }, "$defs": {"id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"}, "document_id": {"type": "string", "pattern": "^(?:sha256:[0-9a-f]{64}|[a-z0-9][a-z0-9._-]{0,127})$"}, "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}
+}

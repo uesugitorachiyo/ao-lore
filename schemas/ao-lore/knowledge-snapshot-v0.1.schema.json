@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/knowledge-snapshot-v0.1.schema.json",
+  "title": "AO Lore Knowledge Snapshot v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["snapshot_schema_version", "latest_generation_id", "latest_generation_manifest_digest", "snapshot_digest", "effective_entries", "legacy_v0_2_entry_count", "answerable_v0_3_entry_count"],
+  "properties": {
+    "snapshot_schema_version": {"const": "ao.lore.knowledge-snapshot.v0.1"},
+    "latest_generation_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]},
+    "latest_generation_manifest_digest": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/digest"}]},
+    "snapshot_digest": {"$ref": "#/$defs/digest"},
+    "effective_entries": {"type": "array", "maxItems": 10000, "items": {"$ref": "#/$defs/entry"}},
+    "legacy_v0_2_entry_count": {"$ref": "#/$defs/count"},
+    "answerable_v0_3_entry_count": {"$ref": "#/$defs/count"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "count": {"type": "integer", "minimum": 0, "maximum": 10000},
+    "entry": {
+      "type": "object", "additionalProperties": false,
+      "required": ["canonical_entry_id", "canonical_entry_digest", "entry_schema_version", "answerability", "claim_count"],
+      "properties": {
+        "canonical_entry_id": {"$ref": "#/$defs/id"}, "canonical_entry_digest": {"$ref": "#/$defs/digest"},
+        "entry_schema_version": {"enum": ["ao.lore.okf-canonical-entry.v0.2", "ao.lore.okf-canonical-entry.v0.3"]},
+        "answerability": {"enum": ["metadata_only", "answerable"]}, "claim_count": {"$ref": "#/$defs/count"}
+      }
+    }
+  }
+}

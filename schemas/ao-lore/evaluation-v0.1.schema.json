@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/evaluation-v0.1.schema.json",
+  "title": "AO Lore matched evaluation manifest v0.1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "evaluation_id", "metric_weights_basis_points", "pairs"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.evaluation-manifest.v0.1"},
+    "evaluation_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+    "metric_weights_basis_points": {
+      "type": "object", "additionalProperties": false,
+      "required": ["parser_fidelity", "parser_cost_efficiency", "coverage_efficiency", "role_configuration_quality"],
+      "properties": {
+        "parser_fidelity": {"type": "integer", "minimum": 0, "maximum": 10000},
+        "parser_cost_efficiency": {"type": "integer", "minimum": 0, "maximum": 10000},
+        "coverage_efficiency": {"type": "integer", "minimum": 0, "maximum": 10000},
+        "role_configuration_quality": {"type": "integer", "minimum": 0, "maximum": 10000}
+      }
+    },
+    "pairs": {
+      "type": "array", "minItems": 1, "maxItems": 50,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["format", "baseline", "challenger"],
+        "properties": {
+          "format": {"enum": ["pdf", "markdown", "html", "docx", "text", "image"]},
+          "baseline": {"$ref": "#/$defs/reference"},
+          "challenger": {"$ref": "#/$defs/reference"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "reference": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._/-]*\\.json$"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

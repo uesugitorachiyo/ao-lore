@@ -1,0 +1,14 @@
+.ao-lore/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+.venv/
+.worktrees/
+working/candidates/*
+!working/candidates/README.md
+tests/fixtures/ao_lore/promotion/generated/

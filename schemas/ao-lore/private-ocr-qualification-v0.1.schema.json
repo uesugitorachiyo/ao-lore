@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/private-ocr-qualification-v0.1.schema.json",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "policy_digest", "runtime_digest", "corpus_digest", "oracle_digest", "configuration_digest", "candidates", "selected_candidate_id", "decision", "network_accessed", "provider_calls", "promotion", "publication", "release", "deployment", "authority_advanced"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.private-ocr-qualification.v0.1"},
+    "policy_digest": {"const": "sha256:fe17335189fcf75471d0adb3251e14a34c7e16cb66071e90361e50d77b6c7e20"},
+    "runtime_digest": {"$ref": "#/$defs/digest"}, "corpus_digest": {"$ref": "#/$defs/digest"},
+    "oracle_digest": {"$ref": "#/$defs/digest"}, "configuration_digest": {"$ref": "#/$defs/digest"},
+    "candidates": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"$ref": "#/$defs/candidate"}},
+    "selected_candidate_id": {"enum": ["candidate-1", "candidate-2", "candidate-3"]},
+    "decision": {"enum": ["hold", "candidate_change", "investigate"]},
+    "network_accessed": {"const": false}, "provider_calls": {"const": false},
+    "promotion": {"const": false}, "publication": {"const": false}, "release": {"const": false},
+    "deployment": {"const": false}, "authority_advanced": {"const": false}
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "millionths": {"type": "integer", "minimum": 0, "maximum": 1000000},
+    "candidate": {"type": "object", "additionalProperties": false,
+      "required": ["candidate_id", "result_digest", "character_accuracy_millionths", "word_accuracy_millionths", "detection_precision_millionths", "detection_recall_millionths", "reading_order_pair_accuracy_millionths", "mean_polygon_iou_millionths", "page_coverage_millionths", "hallucinated_lines", "expected_outcome_accuracy_millionths", "mean_latency_microseconds", "peak_gpu_memory_bytes", "repeatability_identical", "all_hard_gates_pass"],
+      "properties": {
+        "candidate_id": {"enum": ["candidate-1", "candidate-2", "candidate-3"]}, "result_digest": {"$ref": "#/$defs/digest"},
+        "character_accuracy_millionths": {"$ref": "#/$defs/millionths"}, "word_accuracy_millionths": {"$ref": "#/$defs/millionths"},
+        "detection_precision_millionths": {"$ref": "#/$defs/millionths"}, "detection_recall_millionths": {"$ref": "#/$defs/millionths"},
+        "reading_order_pair_accuracy_millionths": {"$ref": "#/$defs/millionths"}, "mean_polygon_iou_millionths": {"$ref": "#/$defs/millionths"},
+        "page_coverage_millionths": {"$ref": "#/$defs/millionths"}, "hallucinated_lines": {"type": "integer", "minimum": 0, "maximum": 1000000},
+        "expected_outcome_accuracy_millionths": {"$ref": "#/$defs/millionths"},
+        "mean_latency_microseconds": {"type": "integer", "minimum": 0, "maximum": 240000000},
+        "peak_gpu_memory_bytes": {"type": "integer", "minimum": 0, "maximum": 34359738368},
+        "repeatability_identical": {"type": "boolean"}, "all_hard_gates_pass": {"type": "boolean"}
+      }
+    }
+  }
+}

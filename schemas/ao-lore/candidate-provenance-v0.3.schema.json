@@ -1,0 +1,238 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/candidate-provenance-v0.3.schema.json",
+  "title": "AO Lore Candidate Provenance v0.3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "candidate_id",
+    "candidate_digest",
+    "proposal_id",
+    "evidence_selection_digest",
+    "primary_workspace_id",
+    "registry_digest",
+    "evidence_origins",
+    "created_at"
+  ],
+  "properties": {
+    "schema_version": {"const": "ao.lore.candidate-provenance.v0.3"},
+    "candidate_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"},
+    "candidate_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "proposal_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"},
+    "evidence_selection_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "primary_workspace_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"},
+    "registry_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "evidence_origins": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {"$ref": "#/$defs/evidence"}
+    },
+    "created_at": {"type": "string", "format": "date-time", "maxLength": 32}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "evidence_id": {
+      "type": "string",
+      "pattern": "^(?:sha256:[0-9a-f]{64}|[a-z0-9][a-z0-9._-]{0,127})$"
+    },
+    "source_span": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["page", "start", "end"],
+      "properties": {
+        "page": {"type": "integer", "minimum": 1, "maximum": 1000000},
+        "start": {"type": "integer", "minimum": 0, "maximum": 1048576},
+        "end": {"type": "integer", "minimum": 0, "maximum": 1048576}
+      }
+    },
+    "qualification_codes": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/id"}
+    },
+    "document_block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workspace_id",
+        "document_store_id",
+        "generation_digest",
+        "document_id",
+        "document_ir_digest",
+        "source_id",
+        "source_digest",
+        "evidence_kind",
+        "evidence_id",
+        "evidence_digest",
+        "block_id",
+        "render_text",
+        "source_span",
+        "authority_role",
+        "sensitivity",
+        "freshness_status",
+        "qualification_codes"
+      ],
+      "properties": {
+        "workspace_id": {"$ref": "#/$defs/id"},
+        "document_store_id": {"$ref": "#/$defs/id"},
+        "generation_digest": {"$ref": "#/$defs/digest"},
+        "document_id": {"$ref": "#/$defs/evidence_id"},
+        "document_ir_digest": {"$ref": "#/$defs/digest"},
+        "source_id": {"$ref": "#/$defs/id"},
+        "source_digest": {"$ref": "#/$defs/digest"},
+        "evidence_kind": {"const": "document_block"},
+        "evidence_id": {"$ref": "#/$defs/evidence_id"},
+        "evidence_digest": {"$ref": "#/$defs/digest"},
+        "block_id": {"$ref": "#/$defs/id"},
+        "render_text": {"type": "string", "minLength": 1, "maxLength": 1024},
+        "source_span": {"$ref": "#/$defs/source_span"},
+        "authority_role": {
+          "enum": [
+            "primary_law",
+            "official_interpretation",
+            "local_enforcement_guidance",
+            "technical_guidance",
+            "operator_procedure",
+            "case_evidence"
+          ]
+        },
+        "sensitivity": {"enum": ["public", "internal", "restricted"]},
+        "freshness_status": {
+          "enum": ["current", "stale", "superseded", "unavailable", "unknown"]
+        },
+        "qualification_codes": {"$ref": "#/$defs/qualification_codes"}
+      }
+    },
+    "graph_claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workspace_id",
+        "graph_id",
+        "graph_digest",
+        "source_id",
+        "source_digest",
+        "evidence_kind",
+        "evidence_id",
+        "evidence_digest",
+        "claim_id",
+        "excerpt",
+        "citation_anchor",
+        "authority_role",
+        "freshness_status",
+        "qualification_codes",
+        "conflict_status",
+        "semantic_review"
+      ],
+      "properties": {
+        "workspace_id": {"$ref": "#/$defs/id"},
+        "graph_id": {"$ref": "#/$defs/id"},
+        "graph_digest": {"$ref": "#/$defs/digest"},
+        "source_id": {"$ref": "#/$defs/id"},
+        "source_digest": {"$ref": "#/$defs/digest"},
+        "evidence_kind": {"const": "graph_claim"},
+        "evidence_id": {"$ref": "#/$defs/evidence_id"},
+        "evidence_digest": {"$ref": "#/$defs/digest"},
+        "claim_id": {"$ref": "#/$defs/id"},
+        "excerpt": {"type": "string", "minLength": 1, "maxLength": 1024},
+        "citation_anchor": {"type": "string", "minLength": 1, "maxLength": 1024},
+        "authority_role": {
+          "enum": [
+            "primary_law",
+            "official_interpretation",
+            "local_enforcement_guidance",
+            "technical_guidance",
+            "operator_procedure",
+            "case_evidence"
+          ]
+        },
+        "freshness_status": {
+          "enum": ["current", "stale", "superseded", "unavailable", "unknown"]
+        },
+        "qualification_codes": {"$ref": "#/$defs/qualification_codes"},
+        "conflict_status": {"enum": ["clear", "conflicted", "investigate"]},
+        "semantic_review": {"const": "verified"}
+      }
+    },
+    "graph_edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workspace_id",
+        "graph_id",
+        "graph_digest",
+        "source_id",
+        "source_digest",
+        "evidence_kind",
+        "evidence_id",
+        "evidence_digest",
+        "edge_id",
+        "source_claim_id",
+        "target_claim_id",
+        "edge_type",
+        "supporting_excerpt_digest",
+        "authority_role",
+        "freshness_status",
+        "qualification_codes",
+        "conflict_status",
+        "semantic_review"
+      ],
+      "properties": {
+        "workspace_id": {"$ref": "#/$defs/id"},
+        "graph_id": {"$ref": "#/$defs/id"},
+        "graph_digest": {"$ref": "#/$defs/digest"},
+        "source_id": {"$ref": "#/$defs/id"},
+        "source_digest": {"$ref": "#/$defs/digest"},
+        "evidence_kind": {"const": "graph_edge"},
+        "evidence_id": {"$ref": "#/$defs/evidence_id"},
+        "evidence_digest": {"$ref": "#/$defs/digest"},
+        "edge_id": {"$ref": "#/$defs/id"},
+        "source_claim_id": {"$ref": "#/$defs/id"},
+        "target_claim_id": {"$ref": "#/$defs/id"},
+        "edge_type": {
+          "enum": [
+            "cites",
+            "defines",
+            "explains",
+            "implements",
+            "applies_locally_to",
+            "provides_remediation_for",
+            "requires_record_of",
+            "qualifies",
+            "supersedes",
+            "effective_from",
+            "conflicts_with"
+          ]
+        },
+        "supporting_excerpt_digest": {"$ref": "#/$defs/digest"},
+        "authority_role": {
+          "enum": [
+            "primary_law",
+            "official_interpretation",
+            "local_enforcement_guidance",
+            "technical_guidance",
+            "operator_procedure",
+            "case_evidence"
+          ]
+        },
+        "freshness_status": {
+          "enum": ["current", "stale", "superseded", "unavailable", "unknown"]
+        },
+        "qualification_codes": {"$ref": "#/$defs/qualification_codes"},
+        "conflict_status": {"enum": ["clear", "conflicted", "investigate"]},
+        "semantic_review": {"const": "verified"}
+      }
+    },
+    "evidence": {
+      "oneOf": [
+        {"$ref": "#/$defs/document_block"},
+        {"$ref": "#/$defs/graph_claim"},
+        {"$ref": "#/$defs/graph_edge"}
+      ]
+    }
+  }
+}

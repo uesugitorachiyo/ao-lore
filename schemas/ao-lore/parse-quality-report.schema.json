@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/parse-quality-report.schema.json",
+  "title": "AO Lore Parse Quality Report v0.1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "document_digest", "parser_id", "parser_version", "threshold_profile", "components", "overall_quality_score", "critical_failures", "decision"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.parse-quality-report.v0.1"},
+    "document_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "parser_id": {"type": "string"}, "parser_version": {"type": "string"}, "threshold_profile": {"type": "string"},
+    "components": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["name", "applicable"], "properties": {"name": {"type": "string"}, "applicable": {"type": "boolean"}, "score": {"type": ["number", "null"], "minimum": 0, "maximum": 1}, "reason": {"type": "string"}}}},
+    "overall_quality_score": {"type": "number", "minimum": 0, "maximum": 1},
+    "critical_failures": {"type": "array", "items": {"type": "string"}},
+    "decision": {"enum": ["accept", "fallback", "quarantine", "reject"]}
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/candidate-review-event-v0.1.schema.json",
+  "title": "AO Lore Candidate Review Event v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "sequence", "candidate_id", "candidate_digest",
+    "previous_event_digest", "decision", "reviewer", "rationale",
+    "recorded_at", "event_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "ao.lore.candidate-review-event.v0.1"},
+    "sequence": {"type": "integer", "minimum": 1, "maximum": 999999},
+    "candidate_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"},
+    "candidate_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "previous_event_digest": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      ]
+    },
+    "decision": {"type": "string", "enum": ["accept", "reject"]},
+    "reviewer": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"},
+    "rationale": {"type": "string", "maxLength": 1024},
+    "recorded_at": {"type": "string", "format": "date-time"},
+    "event_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}

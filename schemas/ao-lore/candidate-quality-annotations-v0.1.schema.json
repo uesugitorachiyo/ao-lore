@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/candidate-quality-annotations-v0.1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "annotations_id",
+    "campaign_id",
+    "sample_digest",
+    "reviewer_id",
+    "reviewed_at",
+    "annotation_counts",
+    "annotations",
+    "annotations_digest",
+    "canonical_query_invoked",
+    "review_event_appended",
+    "candidate_decision_taken",
+    "promotion_prepared",
+    "promotion_applied",
+    "provider_calls",
+    "network_accessed",
+    "credential_used",
+    "publication",
+    "release",
+    "deployment",
+    "authority_advanced"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ao.lore.candidate-quality-annotations.v0.1"
+    },
+    "annotations_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "campaign_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "sample_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "reviewer_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "reviewed_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\dZ$"
+    },
+    "annotation_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "useful_exact",
+        "exact_but_fragmented",
+        "exact_but_low_value",
+        "duplicate",
+        "misleading_without_context",
+        "binding_error"
+      ],
+      "properties": {
+        "useful_exact": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 96
+        },
+        "exact_but_fragmented": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 96
+        },
+        "exact_but_low_value": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 96
+        },
+        "duplicate": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 96
+        },
+        "misleading_without_context": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 96
+        },
+        "binding_error": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 96
+        }
+      }
+    },
+    "annotations": {
+      "type": "array",
+      "minItems": 96,
+      "maxItems": 96,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sample_ordinal",
+          "candidate_id",
+          "claim_id",
+          "citation_id",
+          "source_digest",
+          "policy_digest",
+          "classification",
+          "rationale"
+        ],
+        "properties": {
+          "sample_ordinal": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 96
+          },
+          "candidate_id": {
+            "$ref": "#/$defs/identifier"
+          },
+          "claim_id": {
+            "$ref": "#/$defs/identifier"
+          },
+          "citation_id": {
+            "$ref": "#/$defs/identifier"
+          },
+          "source_digest": {
+            "$ref": "#/$defs/digest"
+          },
+          "policy_digest": {
+            "$ref": "#/$defs/digest"
+          },
+          "classification": {
+            "enum": [
+              "useful_exact",
+              "exact_but_fragmented",
+              "exact_but_low_value",
+              "duplicate",
+              "misleading_without_context",
+              "binding_error"
+            ]
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          }
+        }
+      }
+    },
+    "annotations_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "canonical_query_invoked": {
+      "const": false
+    },
+    "review_event_appended": {
+      "const": false
+    },
+    "candidate_decision_taken": {
+      "const": false
+    },
+    "promotion_prepared": {
+      "const": false
+    },
+    "promotion_applied": {
+      "const": false
+    },
+    "provider_calls": {
+      "const": false
+    },
+    "network_accessed": {
+      "const": false
+    },
+    "credential_used": {
+      "const": false
+    },
+    "publication": {
+      "const": false
+    },
+    "release": {
+      "const": false
+    },
+    "deployment": {
+      "const": false
+    },
+    "authority_advanced": {
+      "const": false
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}

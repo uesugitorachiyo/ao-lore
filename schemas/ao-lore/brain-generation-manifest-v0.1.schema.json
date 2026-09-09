@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "https://schemas.ao-lore.example/brain-generation-manifest-v0.1.schema.json",
+  "title": "AO Lore Brain Generation Manifest v0.1", "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "policy_version", "sequence", "generation_id", "operation", "promotion_id", "prior_generation", "prior_brain_inventory_digest", "transition", "logical_state_digest", "proposal_digest", "authorization_digest", "transaction_intent_digest", "created_at", "manifest_digest"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.brain-generation-manifest.v0.1"}, "policy_version": {"const": "ao.lore.promotion-policy.v0.1"},
+    "sequence": {"type": "integer", "minimum": 1, "maximum": 10000}, "generation_id": {"$ref": "#/$defs/id"},
+    "operation": {"enum": ["apply", "rollback"]}, "promotion_id": {"$ref": "#/$defs/id"},
+    "prior_generation": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/generation"}]},
+    "prior_brain_inventory_digest": {"$ref": "#/$defs/digest"},
+    "transition": {"oneOf": [{"$ref": "#/$defs/add"}, {"$ref": "#/$defs/restore"}]},
+    "logical_state_digest": {"$ref": "#/$defs/digest"}, "proposal_digest": {"$ref": "#/$defs/digest"},
+    "authorization_digest": {"$ref": "#/$defs/digest"}, "transaction_intent_digest": {"$ref": "#/$defs/digest"},
+    "created_at": {"$ref": "#/$defs/time"}, "manifest_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"}, "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "time": {"type": "string", "format": "date-time", "maxLength": 32},
+    "generation": {"type": "object", "additionalProperties": false, "required": ["generation_id", "manifest_digest"], "properties": {"generation_id": {"$ref": "#/$defs/id"}, "manifest_digest": {"$ref": "#/$defs/digest"}}},
+    "add": {"type": "object", "additionalProperties": false, "required": ["kind", "canonical_entry_id", "canonical_entry_digest"], "properties": {"kind": {"const": "add"}, "canonical_entry_id": {"$ref": "#/$defs/id"}, "canonical_entry_digest": {"$ref": "#/$defs/digest"}}},
+    "restore": {"type": "object", "additionalProperties": false, "required": ["kind", "restored_generation_id", "restored_manifest_digest"], "properties": {"kind": {"const": "restore"}, "restored_generation_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]}, "restored_manifest_digest": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/digest"}]}}}
+  }
+}

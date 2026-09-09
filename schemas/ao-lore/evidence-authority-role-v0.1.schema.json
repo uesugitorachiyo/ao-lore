@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/evidence-authority-role-v0.1.schema.json",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "role", "precedence", "enacted_law", "may_override_roles", "role_digest"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.evidence-authority-role.v0.1"},
+    "role": {"enum": ["primary_law", "official_interpretation", "local_enforcement_guidance", "technical_guidance", "operator_procedure", "case_evidence"]},
+    "precedence": {"type": "integer", "minimum": 0, "maximum": 5},
+    "enacted_law": {"type": "boolean"},
+    "may_override_roles": {"type": "array", "minItems": 0, "maxItems": 5, "uniqueItems": true, "items": {"enum": ["primary_law", "official_interpretation", "local_enforcement_guidance", "technical_guidance", "operator_procedure", "case_evidence"]}},
+    "role_digest": {"$ref": "#/$defs/digest"}
+  },
+  "oneOf": [
+    {"properties": {"role": {"const": "primary_law"}, "precedence": {"const": 5}, "enacted_law": {"const": true}, "may_override_roles": {"const": ["official_interpretation", "local_enforcement_guidance", "technical_guidance", "operator_procedure", "case_evidence"]}}},
+    {"properties": {"role": {"const": "official_interpretation"}, "precedence": {"const": 4}, "enacted_law": {"const": false}, "may_override_roles": {"const": ["local_enforcement_guidance", "technical_guidance", "operator_procedure", "case_evidence"]}}},
+    {"properties": {"role": {"const": "local_enforcement_guidance"}, "precedence": {"const": 3}, "enacted_law": {"const": false}, "may_override_roles": {"const": ["technical_guidance", "operator_procedure", "case_evidence"]}}},
+    {"properties": {"role": {"const": "technical_guidance"}, "precedence": {"const": 2}, "enacted_law": {"const": false}, "may_override_roles": {"const": ["operator_procedure", "case_evidence"]}}},
+    {"properties": {"role": {"const": "operator_procedure"}, "precedence": {"const": 1}, "enacted_law": {"const": false}, "may_override_roles": {"const": ["case_evidence"]}}},
+    {"properties": {"role": {"const": "case_evidence"}, "precedence": {"const": 0}, "enacted_law": {"const": false}, "may_override_roles": {"const": []}}}
+  ],
+  "$defs": {"digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}
+}

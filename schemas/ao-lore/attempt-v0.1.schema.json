@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/attempt-v0.1.schema.json",
+  "title": "AO Lore deterministic evaluation attempt v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "attempt_id", "system_id", "format", "fixture_corpus_sha256", "workload_profile_sha256", "source_input_sha256", "result_sha256", "metrics", "role_configuration", "eligible", "ineligibility_reasons", "failures", "exclusions", "trace_integrity"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.evaluation-attempt.v0.1"},
+    "attempt_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+    "system_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+    "format": {"enum": ["pdf", "markdown", "html", "docx", "text", "image"]},
+    "fixture_corpus_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "workload_profile_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_input_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "result_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["parser_fidelity", "parser_cost_efficiency", "coverage_efficiency", "role_configuration_quality"],
+      "properties": {
+        "parser_fidelity": {"$ref": "#/$defs/metric"},
+        "parser_cost_efficiency": {"$ref": "#/$defs/metric"},
+        "coverage_efficiency": {"$ref": "#/$defs/metric"},
+        "role_configuration_quality": {"$ref": "#/$defs/metric"}
+      }
+    },
+    "role_configuration": {
+      "type": "object", "additionalProperties": false,
+      "required": ["parser", "distiller", "navigator", "synthesizer"],
+      "properties": {"parser": {"type": "string"}, "distiller": {"type": "string"}, "navigator": {"type": "string"}, "synthesizer": {"type": "string"}}
+    },
+    "eligible": {"type": "boolean"},
+    "ineligibility_reasons": {"type": "array", "items": {"type": "string"}},
+    "failures": {"type": "array", "items": {"type": "string"}},
+    "exclusions": {"type": "array", "items": {"type": "string"}},
+    "trace_integrity": {"type": "boolean"}
+  },
+  "$defs": {
+    "metric": {
+      "type": "object", "additionalProperties": false,
+      "required": ["applicable", "score_basis_points", "reason"],
+      "properties": {
+        "applicable": {"type": "boolean"},
+        "score_basis_points": {"type": ["integer", "null"], "minimum": 0, "maximum": 10000},
+        "reason": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

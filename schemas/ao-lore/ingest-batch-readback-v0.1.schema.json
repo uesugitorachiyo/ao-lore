@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/ingest-batch-readback-v0.1.schema.json",
+  "title": "AO Lore Ingest Batch Readback v0.1",
+  "$comment": "Runtime validation MUST enforce aggregate count/status arithmetic and ordered item correspondence; JSON Schema constrains only shape and bounds.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "batch_id", "manifest_digest", "status", "total",
+    "created", "unchanged", "rejected", "processed", "items", "next_commands",
+    "canonical", "promotion_authority"
+  ],
+  "properties": {
+    "schema_version": {"const": "ao.lore.ingest-batch-readback.v0.1"},
+    "batch_id": {"$ref": "#/$defs/batch_id"},
+    "manifest_digest": {"$ref": "#/$defs/digest"},
+    "status": {"type": "string", "enum": ["completed", "partial"]},
+    "total": {"type": "integer", "minimum": 1, "maximum": 100},
+    "created": {"type": "integer", "minimum": 0, "maximum": 100},
+    "unchanged": {"type": "integer", "minimum": 0, "maximum": 100},
+    "rejected": {"type": "integer", "minimum": 0, "maximum": 100},
+    "processed": {"type": "integer", "minimum": 1, "maximum": 100},
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "uniqueItems": true,
+      "items": {
+        "oneOf": [
+          {"$ref": "#/$defs/success_item"},
+          {"$ref": "#/$defs/rejected_item"}
+        ]
+      }
+    },
+    "next_commands": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 301,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 23,
+        "maxLength": 196,
+        "pattern": "^(?:ao-lore candidate inspect --candidate-id candidate-[a-z0-9][a-z0-9._-]{0,117}|ao-lore candidate review --candidate-id candidate-[a-z0-9][a-z0-9._-]{0,117} --decision accept --reviewer <reviewer-id>|ao-lore candidate list --json)$"
+      }
+    },
+    "canonical": {"const": false},
+    "promotion_authority": {"const": false}
+  },
+  "$defs": {
+    "batch_id": {
+      "type": "string",
+      "pattern": "^batch-[a-z0-9][a-z0-9-]{0,62}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "item_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+    },
+    "candidate_id": {
+      "type": "string",
+      "pattern": "^candidate-[a-z0-9][a-z0-9._-]{0,117}$"
+    },
+    "success_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "item_id", "source_digest", "status", "candidate_id",
+        "candidate_digest", "provenance_digest", "review_status"
+      ],
+      "properties": {
+        "item_id": {"$ref": "#/$defs/item_id"},
+        "source_digest": {"$ref": "#/$defs/digest"},
+        "status": {"type": "string", "enum": ["created", "unchanged"]},
+        "candidate_id": {"$ref": "#/$defs/candidate_id"},
+        "candidate_digest": {"$ref": "#/$defs/digest"},
+        "provenance_digest": {"$ref": "#/$defs/digest"},
+        "review_status": {
+          "type": "string",
+          "enum": ["unreviewed", "accepted", "rejected"]
+        }
+      }
+    },
+    "rejected_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["item_id", "source_digest", "status", "error_code"],
+      "properties": {
+        "item_id": {"$ref": "#/$defs/item_id"},
+        "source_digest": {"$ref": "#/$defs/digest"},
+        "status": {"const": "rejected"},
+        "error_code": {
+          "type": "string",
+          "enum": [
+            "source_invalid", "source_digest_mismatch", "qualification_invalid",
+            "parser_rejected", "distillation_rejected", "candidate_conflict",
+            "document_rejected"
+          ]
+        }
+      }
+    }
+  }
+}

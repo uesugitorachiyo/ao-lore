@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/evidence-selection-recovery-v0.1.schema.json",
+  "title": "AO Lore Evidence Selection Recovery v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "workspace_id",
+    "status",
+    "reason_code",
+    "proposal_ids",
+    "candidate_ids",
+    "recovery_digest",
+    "candidate_creation",
+    "legal_advice",
+    "property_decision",
+    "candidate_review",
+    "candidate_decision",
+    "promotion",
+    "canonical_query",
+    "provider",
+    "credential",
+    "private_data",
+    "publication",
+    "release",
+    "deployment",
+    "authority_advanced"
+  ],
+  "properties": {
+    "schema_version": {"const": "ao.lore.evidence-selection-recovery.v0.1"},
+    "workspace_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"},
+    "status": {"enum": ["empty", "no_op", "recovered", "investigate"]},
+    "reason_code": {"type": "string", "minLength": 1, "maxLength": 64},
+    "proposal_ids": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"}
+    },
+    "candidate_ids": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"}
+    },
+    "recovery_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "candidate_creation": {"const": false},
+    "legal_advice": {"const": false},
+    "property_decision": {"const": false},
+    "candidate_review": {"const": false},
+    "candidate_decision": {"const": false},
+    "promotion": {"const": false},
+    "canonical_query": {"const": false},
+    "provider": {"const": false},
+    "credential": {"const": false},
+    "private_data": {"const": false},
+    "publication": {"const": false},
+    "release": {"const": false},
+    "deployment": {"const": false},
+    "authority_advanced": {"const": false}
+  }
+}

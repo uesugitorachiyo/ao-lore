@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/candidate-quality-questions-v0.1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "question_set_id",
+    "campaign_id",
+    "question_count",
+    "questions",
+    "questions_digest",
+    "canonical_query_invoked",
+    "review_event_appended",
+    "candidate_decision_taken",
+    "promotion_prepared",
+    "promotion_applied",
+    "provider_calls",
+    "network_accessed",
+    "credential_used",
+    "publication",
+    "release",
+    "deployment",
+    "authority_advanced"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ao.lore.candidate-quality-questions.v0.1"
+    },
+    "question_set_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "campaign_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "question_count": {
+      "type": "integer",
+      "const": 24
+    },
+    "questions": {
+      "type": "array",
+      "minItems": 24,
+      "maxItems": 24,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "question_id",
+          "candidate_id",
+          "source_digest",
+          "category",
+          "prompt",
+          "expected_outcome",
+          "expected_claim_ids"
+        ],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "category": {
+                  "const": "unsupported"
+                }
+              },
+              "required": [
+                "category"
+              ]
+            },
+            "then": {
+              "not": {
+                "required": [
+                  "evidence_query"
+                ]
+              }
+            },
+            "else": {
+              "required": [
+                "evidence_query"
+              ]
+            }
+          }
+        ],
+        "properties": {
+          "question_id": {
+            "$ref": "#/$defs/identifier"
+          },
+          "candidate_id": {
+            "$ref": "#/$defs/identifier"
+          },
+          "source_digest": {
+            "$ref": "#/$defs/digest"
+          },
+          "category": {
+            "enum": [
+              "fact",
+              "procedure",
+              "qualification",
+              "unsupported"
+            ]
+          },
+          "prompt": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "evidence_query": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "allOf": [
+              {
+                "pattern": "^(?!.*[A-Z])[^\\W_]+(?: [^\\W_]+)*$"
+              },
+              {
+                "not": {
+                  "pattern": "^[a-z0-9._-]{1,128}$"
+                }
+              }
+            ]
+          },
+          "expected_outcome": {
+            "enum": [
+              "supported",
+              "refusal"
+            ]
+          },
+          "expected_claim_ids": {
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 4,
+            "items": {
+              "$ref": "#/$defs/identifier"
+            }
+          }
+        }
+      }
+    },
+    "questions_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "canonical_query_invoked": {
+      "const": false
+    },
+    "review_event_appended": {
+      "const": false
+    },
+    "candidate_decision_taken": {
+      "const": false
+    },
+    "promotion_prepared": {
+      "const": false
+    },
+    "promotion_applied": {
+      "const": false
+    },
+    "provider_calls": {
+      "const": false
+    },
+    "network_accessed": {
+      "const": false
+    },
+    "credential_used": {
+      "const": false
+    },
+    "publication": {
+      "const": false
+    },
+    "release": {
+      "const": false
+    },
+    "deployment": {
+      "const": false
+    },
+    "authority_advanced": {
+      "const": false
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}

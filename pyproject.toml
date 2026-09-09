@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ao-lore"
+version = "0.1.0"
+description = "Standalone local-first evidence coverage engine"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "AO Lore contributors" }]
+dependencies = []
+
+[project.optional-dependencies]
+pdf = ["docling==2.118.1"]
+
+[project.scripts]
+ao-lore = "ao_lore.__main__:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/private-docx-domain-review-v0.1.schema.json",
+  "title": "AO Lore Representative-Domain Private DOCX Review v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "source_file": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*\\\\)(?!.*//)(?!.*(?:^|/)\\.{1,2}(?:/|$))[A-Za-z0-9._-]+\\.docx$"
+    },
+    "document": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "item_id",
+        "source_file"
+      ],
+      "properties": {
+        "item_id": {
+          "enum": [
+            "docx-domain-01",
+            "docx-domain-02",
+            "docx-domain-03",
+            "docx-domain-04"
+          ]
+        },
+        "source_file": {
+          "enum": [
+            "0016-docx-nomagic.docx",
+            "0012-docx-nomagic.docx",
+            "0094-docx-nomagic.docx",
+            "0063-docx-nomagic.docx"
+          ]
+        }
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "corpus_id",
+    "transformation_id",
+    "documents",
+    "ocr_enabled",
+    "network_accessed",
+    "provider_calls",
+    "promotion_authority",
+    "claims_authority_advance"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ao.lore.private-docx-domain-review.v0.1"
+    },
+    "corpus_id": {
+      "const": "docx-nomagic-uk-public-sector-v1"
+    },
+    "transformation_id": {
+      "const": "restore-ooxml-local-header-v1"
+    },
+    "documents": {
+      "$comment": "Runtime additionally enforces the exact four-item order and exact item_id/source_file pairing.",
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+        "$ref": "#/$defs/document"
+      }
+    },
+    "ocr_enabled": {
+      "const": false
+    },
+    "network_accessed": {
+      "const": false
+    },
+    "provider_calls": {
+      "const": false
+    },
+    "promotion_authority": {
+      "const": false
+    },
+    "claims_authority_advance": {
+      "const": false
+    }
+  }
+}

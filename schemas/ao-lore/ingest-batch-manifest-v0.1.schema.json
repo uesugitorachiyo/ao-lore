@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/ingest-batch-manifest-v0.1.schema.json",
+  "title": "AO Lore Ingest Batch Manifest v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "batch_id", "documents", "continue_on_error"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.ingest-batch-manifest.v0.1"},
+    "batch_id": {"$ref": "#/$defs/batch_id"},
+    "documents": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "uniqueItems": true,
+      "$comment": "Runtime validation MUST enforce keyed uniqueness of both item_id and source across documents; uniqueItems only rejects identical whole entries.",
+      "items": {"$ref": "#/$defs/document"}
+    },
+    "continue_on_error": {"const": true}
+  },
+  "$defs": {
+    "batch_id": {
+      "type": "string",
+      "pattern": "^batch-[a-z0-9][a-z0-9-]{0,62}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "item_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+    },
+    "source": {
+      "type": "string",
+      "minLength": 13,
+      "maxLength": 1024,
+      "pattern": "^sources/(?!\\.\\.?/)(?!.*(?:/\\.\\.?)(?:/|$))(?!.*//)[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)*\\.pdf$"
+    },
+    "candidate_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "candidates"],
+      "properties": {
+        "schema_version": {"const": "ao.lore.candidate-comparison-context.v0.1"},
+        "candidates": {
+          "type": "array",
+          "maxItems": 100,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/candidate_reference"}
+        }
+      }
+    },
+    "candidate_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidate_id", "candidate_digest"],
+      "properties": {
+        "candidate_id": {
+          "type": "string",
+          "pattern": "^candidate-[a-z0-9][a-z0-9._-]{0,117}$"
+        },
+        "candidate_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "knowledge_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sensitivity", "stale_after"],
+      "properties": {
+        "sensitivity": {"enum": ["public", "internal", "restricted"]},
+        "stale_after": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$",
+              "maxLength": 32
+            }
+          ]
+        }
+      }
+    },
+    "document": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["item_id", "source", "source_digest"],
+      "properties": {
+        "item_id": {"$ref": "#/$defs/item_id"},
+        "source": {"$ref": "#/$defs/source"},
+        "source_digest": {"$ref": "#/$defs/digest"},
+        "candidate_context": {"$ref": "#/$defs/candidate_context"},
+        "knowledge_policy": {"$ref": "#/$defs/knowledge_policy"}
+      }
+    }
+  }
+}

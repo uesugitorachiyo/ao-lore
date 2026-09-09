@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/ingest-batch-manifest-v0.2.schema.json",
+  "title": "AO Lore Ingest Batch Manifest v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "batch_id",
+    "format_id",
+    "media_type",
+    "parser_id",
+    "parser_version",
+    "documents",
+    "continue_on_error"
+  ],
+  "properties": {
+    "schema_version": {"const": "ao.lore.ingest-batch-manifest.v0.2"},
+    "batch_id": {"$ref": "#/$defs/batch_id"},
+    "format_id": {"const": "docx"},
+    "media_type": {
+      "const": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    },
+    "parser_id": {"const": "native-docx-ooxml"},
+    "parser_version": {"const": "1.0.0"},
+    "documents": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "uniqueItems": true,
+      "$comment": "Runtime validation MUST enforce keyed uniqueness of both item_id and source across documents; uniqueItems only rejects identical whole entries.",
+      "items": {"$ref": "#/$defs/document"}
+    },
+    "continue_on_error": {"const": true}
+  },
+  "$defs": {
+    "batch_id": {
+      "type": "string",
+      "pattern": "^batch-[a-z0-9][a-z0-9-]{0,62}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "item_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+    },
+    "source": {
+      "type": "string",
+      "minLength": 13,
+      "maxLength": 1024,
+      "pattern": "^sources/(?!\\.\\.?/)(?!.*(?:/\\.\\.?)(?:/|$))(?!.*//)[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)*\\.docx$"
+    },
+    "candidate_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "candidates"],
+      "properties": {
+        "schema_version": {"const": "ao.lore.candidate-comparison-context.v0.1"},
+        "candidates": {
+          "type": "array",
+          "maxItems": 100,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/candidate_reference"}
+        }
+      }
+    },
+    "candidate_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidate_id", "candidate_digest"],
+      "properties": {
+        "candidate_id": {
+          "type": "string",
+          "pattern": "^candidate-[a-z0-9][a-z0-9._-]{0,117}$"
+        },
+        "candidate_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "document": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["item_id", "source", "source_digest"],
+      "properties": {
+        "item_id": {"$ref": "#/$defs/item_id"},
+        "source": {"$ref": "#/$defs/source"},
+        "source_digest": {"$ref": "#/$defs/digest"},
+        "candidate_context": {"$ref": "#/$defs/candidate_context"}
+      }
+    }
+  }
+}

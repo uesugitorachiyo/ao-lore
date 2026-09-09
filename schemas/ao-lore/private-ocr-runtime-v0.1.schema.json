@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/private-ocr-runtime-v0.1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "policy_digest", "python_version", "paddleocr_version", "paddlepaddle_gpu_version", "cuda_version", "runtime_digest", "gpu_identity_digest", "network_accessed", "provider_calls", "promotion", "publication", "release", "deployment", "authority_advanced"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.private-ocr-runtime.v0.1"},
+    "policy_digest": {"const": "sha256:fe17335189fcf75471d0adb3251e14a34c7e16cb66071e90361e50d77b6c7e20"},
+    "python_version": {"const": "3.12"},
+    "paddleocr_version": {"const": "3.7.0"},
+    "paddlepaddle_gpu_version": {"const": "3.3.0"},
+    "cuda_version": {"const": "12.6"},
+    "runtime_digest": {"$ref": "#/$defs/digest"},
+    "gpu_identity_digest": {"$ref": "#/$defs/digest"},
+    "network_accessed": {"const": false}, "provider_calls": {"const": false},
+    "promotion": {"const": false}, "publication": {"const": false},
+    "release": {"const": false}, "deployment": {"const": false},
+    "authority_advanced": {"const": false}
+  },
+  "$defs": {"digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}
+}

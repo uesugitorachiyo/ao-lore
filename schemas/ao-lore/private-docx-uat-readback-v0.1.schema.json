@@ -1,0 +1,211 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/private-docx-uat-readback-v0.1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "corpus_id",
+    "corpus_digest",
+    "configuration_digest",
+    "qualification_digest",
+    "aggregate_digest",
+    "uat_digest",
+    "campaign_origin_digest",
+    "lifecycle_status",
+    "tuning_decision",
+    "qualified",
+    "counts",
+    "conversion_counts",
+    "results",
+    "aggregate",
+    "ocr_enabled",
+    "ocr_used",
+    "network_accessed",
+    "provider_calls",
+    "promotion_authority",
+    "claims_authority_advance"
+  ],
+  "properties": {
+    "schema_version": { "const": "ao.lore.private-docx-uat-readback.v0.1" },
+    "corpus_id": { "const": "docx-nomagic-uk-public-sector-v1" },
+    "corpus_digest": { "$ref": "#/$defs/digest" },
+    "configuration_digest": { "$ref": "#/$defs/digest" },
+    "qualification_digest": { "$ref": "#/$defs/digest" },
+    "aggregate_digest": { "$ref": "#/$defs/digest" },
+    "uat_digest": { "$ref": "#/$defs/digest" },
+    "campaign_origin_digest": { "$ref": "#/$defs/digest" },
+    "lifecycle_status": { "enum": ["partial", "completed"] },
+    "tuning_decision": { "enum": ["hold", "candidate_change", "investigate"] },
+    "qualified": { "const": false },
+    "counts": { "$ref": "#/$defs/counts" },
+    "conversion_counts": { "$ref": "#/$defs/conversion_counts" },
+    "results": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/result" },
+      "$comment": "Ordered exact representative DOCX sequence; no path or content fields are allowed."
+    },
+    "aggregate": { "$ref": "#/$defs/aggregate" },
+    "ocr_enabled": { "const": false },
+    "ocr_used": { "const": false },
+    "network_accessed": { "const": false },
+    "provider_calls": { "const": false },
+    "promotion_authority": { "const": false },
+    "claims_authority_advance": { "const": false }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "minLength": 71,
+      "maxLength": 71
+    },
+    "count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000
+    },
+    "metric": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "latency": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1000000
+    },
+    "memory": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1000000000000
+    },
+    "review_status": {
+      "type": "string",
+      "enum": ["unreviewed", "accepted", "rejected"]
+    },
+    "item_id": {
+      "type": "string",
+      "enum": ["docx-domain-01", "docx-domain-02", "docx-domain-03", "docx-domain-04"]
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["total", "created", "unchanged", "rejected", "processed", "successful", "candidate_queue", "interrupted", "resumed", "rerun"],
+      "properties": {
+        "total": { "$ref": "#/$defs/count" },
+        "created": { "$ref": "#/$defs/count" },
+        "unchanged": { "$ref": "#/$defs/count" },
+        "rejected": { "$ref": "#/$defs/count" },
+        "processed": { "$ref": "#/$defs/count" },
+        "successful": { "$ref": "#/$defs/count" },
+        "candidate_queue": { "$ref": "#/$defs/count" },
+        "interrupted": { "$ref": "#/$defs/count" },
+        "resumed": { "$ref": "#/$defs/count" },
+        "rerun": { "$ref": "#/$defs/count" }
+      }
+    },
+    "conversion_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["initial", "resumed", "rerun"],
+      "properties": {
+        "initial": { "$ref": "#/$defs/count" },
+        "resumed": { "$ref": "#/$defs/count" },
+        "rerun": { "$ref": "#/$defs/count" }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["item_id", "source_digest", "status", "candidate_id", "candidate_digest", "provenance_digest", "review_status"],
+      "properties": {
+        "item_id": { "$ref": "#/$defs/item_id" },
+        "source_digest": { "$ref": "#/$defs/digest" },
+        "status": { "const": "created" },
+        "candidate_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "candidate_digest": { "$ref": "#/$defs/digest" },
+        "provenance_digest": { "$ref": "#/$defs/digest" },
+        "review_status": { "$ref": "#/$defs/review_status" }
+      }
+    },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metrics", "exclusions", "stable_failures", "latency_seconds", "peak_memory_bytes", "repeatability"],
+      "properties": {
+        "metrics": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["structural_fidelity", "text_fidelity", "source_location_fidelity", "expected_outcome_accuracy", "expected_rejection_count", "accepted_document_count"],
+          "properties": {
+            "structural_fidelity": { "$ref": "#/$defs/metric" },
+            "text_fidelity": { "$ref": "#/$defs/metric" },
+            "source_location_fidelity": { "$ref": "#/$defs/metric" },
+            "expected_outcome_accuracy": { "$ref": "#/$defs/metric" },
+            "expected_rejection_count": { "const": 12 },
+            "accepted_document_count": { "const": 88 }
+          }
+        },
+        "exclusions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["structural_fidelity", "text_fidelity", "source_location_fidelity", "expected_outcome_accuracy"]
+          },
+          "uniqueItems": true,
+          "minItems": 0,
+          "maxItems": 4
+        },
+        "stable_failures": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["invalid_package", "unsupported_active_content", "representative_unexpected"],
+          "properties": {
+            "invalid_package": { "const": 1 },
+            "unsupported_active_content": { "const": 11 },
+            "representative_unexpected": { "type": "integer", "minimum": 0, "maximum": 8 }
+          }
+        },
+        "latency_seconds": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["min", "mean", "max"],
+          "properties": {
+            "min": { "$ref": "#/$defs/latency" },
+            "mean": { "$ref": "#/$defs/latency" },
+            "max": { "$ref": "#/$defs/latency" }
+          }
+        },
+        "peak_memory_bytes": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["min", "mean", "max"],
+          "properties": {
+            "min": { "$ref": "#/$defs/memory" },
+            "mean": { "$ref": "#/$defs/memory" },
+            "max": { "$ref": "#/$defs/memory" }
+          }
+        },
+        "repeatability": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["runs", "identical", "score"],
+          "properties": {
+            "runs": { "$ref": "#/$defs/count" },
+            "identical": { "type": "boolean" },
+            "score": { "$ref": "#/$defs/metric" }
+          }
+        }
+      }
+    }
+  }
+}

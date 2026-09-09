@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "https://schemas.ao-lore.example/rollback-proposal-v0.1.schema.json",
+  "title": "AO Lore Rollback Proposal v0.1", "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "policy_version", "proposal_id", "promotion_id", "candidate_digest", "provenance_digest", "accepted_review_head_digest", "canonical_entry_digest", "source_head", "current_brain_inventory_digest", "current_generation_id", "current_generation_manifest_digest", "restored_generation_id", "restored_generation_manifest_digest", "expected_generation_id", "allowed_write_set", "allowed_write_set_digest", "prepared_at", "expires_at", "proposal_digest"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.rollback-proposal.v0.1"}, "policy_version": {"const": "ao.lore.promotion-policy.v0.1"},
+    "proposal_id": {"$ref": "#/$defs/id"}, "promotion_id": {"$ref": "#/$defs/id"}, "candidate_digest": {"$ref": "#/$defs/digest"},
+    "provenance_digest": {"$ref": "#/$defs/digest"}, "accepted_review_head_digest": {"$ref": "#/$defs/digest"}, "canonical_entry_digest": {"$ref": "#/$defs/digest"},
+    "source_head": {"type": "string", "pattern": "^[0-9a-f]{40}$"}, "current_brain_inventory_digest": {"$ref": "#/$defs/digest"}, "current_generation_id": {"$ref": "#/$defs/id"}, "current_generation_manifest_digest": {"$ref": "#/$defs/digest"},
+    "restored_generation_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]}, "restored_generation_manifest_digest": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/digest"}]},
+    "expected_generation_id": {"$ref": "#/$defs/id"}, "allowed_write_set": {"$ref": "#/$defs/write_set"}, "allowed_write_set_digest": {"$ref": "#/$defs/digest"},
+    "prepared_at": {"$ref": "#/$defs/time"}, "expires_at": {"$ref": "#/$defs/time"}, "proposal_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"}, "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}, "time": {"type": "string", "format": "date-time", "maxLength": 32},
+    "write_set": {"type": "array", "minItems": 1, "maxItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^generations/[0-9]{6}-[a-z0-9][a-z0-9._-]{0,127}/manifest\\.json$", "maxLength": 256}}
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "schema_version": "ao.lore.candidate-quality-sampling-fixture-spec.v0.1",
+  "campaign_id": "candidate-quality-campaign-20260812",
+  "correlation_id": "ao-lore-public-candidate-quality-review-20260812",
+  "terminal_readback_digest": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "claim_counts": [19, 13, 73, 21, 71, 289],
+  "sample_counts": [19, 13, 14, 12, 14, 24],
+  "fixture_digest": "sha256:04de53363c8b3dc287959a2cff25680328617bb96fb56f28f6706e088b05589f",
+  "public_safe": true,
+  "live_authorization": false,
+  "network_authority": false
+}

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "https://schemas.ao-lore.example/promotion-authorization-consumption-v0.1.schema.json",
+  "title": "AO Lore Promotion Authorization Consumption v0.1", "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "authorization_id", "nonce", "authorization_digest", "operation", "proposal_digest", "promotion_id", "transaction_intent_digest", "allowed_write_set_digest", "state", "previous_record_digest", "recorded_at", "record_digest"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.promotion-authorization-consumption.v0.1"}, "authorization_id": {"$ref": "#/$defs/id"}, "nonce": {"$ref": "#/$defs/id"}, "authorization_digest": {"$ref": "#/$defs/digest"},
+    "operation": {"enum": ["apply", "rollback"]}, "proposal_digest": {"$ref": "#/$defs/digest"}, "promotion_id": {"$ref": "#/$defs/id"},
+    "transaction_intent_digest": {"$ref": "#/$defs/digest"}, "allowed_write_set_digest": {"$ref": "#/$defs/digest"}, "state": {"enum": ["reserved", "committed"]},
+    "previous_record_digest": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/digest"}]}, "recorded_at": {"$ref": "#/$defs/time"}, "record_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {"id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"}, "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}, "time": {"type": "string", "format": "date-time", "maxLength": 32}}
+}

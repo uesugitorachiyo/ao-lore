@@ -1,0 +1,5 @@
+--index-url https://pypi.org/simple
+--only-binary=:all:
+attrs==23.2.0 --hash=sha256:99b87a485a5820b23b879f04c2305b44b951b502fd64be915879d77a7e8fc6f1
+jsonschema==4.10.3 --hash=sha256:443442f9ac2fdfde7bc99079f0ba08e5d167fc67749e9fc706a393bc8857ca48
+pyrsistent==0.20.0 --hash=sha256:cae40a9e3ce178415040a0383f00e8d68b569e97f31928a3a8ad37e3fde6df6a

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/private-ocr-worker-contract-v0.1.schema.json",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "policy_digest", "run_id", "candidate_id", "runtime_digest", "model_set_digest", "raster_manifest_digest", "configuration_digest", "gpu_identity_digest", "page_ids", "network_accessed", "provider_calls", "promotion", "publication", "release", "deployment", "authority_advanced"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.private-ocr-worker-contract.v0.1"},
+    "policy_digest": {"const": "sha256:fe17335189fcf75471d0adb3251e14a34c7e16cb66071e90361e50d77b6c7e20"},
+    "run_id": {"$ref": "#/$defs/id"}, "candidate_id": {"enum": ["candidate-1", "candidate-2", "candidate-3"]},
+    "runtime_digest": {"$ref": "#/$defs/digest"}, "model_set_digest": {"$ref": "#/$defs/digest"},
+    "raster_manifest_digest": {"$ref": "#/$defs/digest"}, "configuration_digest": {"$ref": "#/$defs/digest"},
+    "gpu_identity_digest": {"$ref": "#/$defs/digest"},
+    "page_ids": {"type": "array", "minItems": 1, "maxItems": 100, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "network_accessed": {"const": false}, "provider_calls": {"const": false},
+    "promotion": {"const": false}, "publication": {"const": false}, "release": {"const": false},
+    "deployment": {"const": false}, "authority_advanced": {"const": false}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}

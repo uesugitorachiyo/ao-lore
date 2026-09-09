@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/private-ocr-uat-readback-v0.1.schema.json",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "policy_digest", "qualification_digest", "corpus_digest", "aggregate_digest", "initial_conversions", "resumed_conversions", "rerun_conversions", "successful_documents", "rejected_documents", "calibration_attempts_per_item", "decision", "brain_before_digest", "brain_after_work_digest", "brain_after_cleanup_digest", "network_accessed", "provider_calls", "promotion", "publication", "release", "deployment", "authority_advanced"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.private-ocr-uat-readback.v0.1"},
+    "policy_digest": {"const": "sha256:fe17335189fcf75471d0adb3251e14a34c7e16cb66071e90361e50d77b6c7e20"},
+    "qualification_digest": {"$ref": "#/$defs/digest"}, "corpus_digest": {"$ref": "#/$defs/digest"}, "aggregate_digest": {"$ref": "#/$defs/digest"},
+    "initial_conversions": {"const": 1}, "resumed_conversions": {"const": 3}, "rerun_conversions": {"const": 0},
+    "successful_documents": {"const": 4}, "rejected_documents": {"const": 0}, "calibration_attempts_per_item": {"const": 2},
+    "decision": {"enum": ["hold", "candidate_change", "investigate"]},
+    "brain_before_digest": {"$ref": "#/$defs/digest"}, "brain_after_work_digest": {"$ref": "#/$defs/digest"}, "brain_after_cleanup_digest": {"$ref": "#/$defs/digest"},
+    "network_accessed": {"const": false}, "provider_calls": {"const": false},
+    "promotion": {"const": false}, "publication": {"const": false}, "release": {"const": false},
+    "deployment": {"const": false}, "authority_advanced": {"const": false}
+  },
+  "$defs": {"digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}
+}

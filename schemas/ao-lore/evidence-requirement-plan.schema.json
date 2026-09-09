@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/evidence-requirement-plan.schema.json",
+  "title": "AO Lore Evidence Requirement Plan v0.1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "query_digest", "profile_id", "requirements", "budgets"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.evidence-requirement-plan.v0.1"},
+    "query_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}, "profile_id": {"type": "string"},
+    "requirements": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["id", "criterion", "importance_weight", "evidence_type", "lifecycle_condition", "trust_tier", "citation_required", "provenance_required", "mandatory", "status"], "properties": {"id": {"type": "string"}, "criterion": {"type": "string"}, "importance_weight": {"type": "number", "exclusiveMinimum": 0}, "evidence_type": {"type": "string"}, "lifecycle_condition": {"type": "string"}, "trust_tier": {"type": ["string", "null"]}, "citation_required": {"type": "boolean"}, "provenance_required": {"type": "boolean"}, "mandatory": {"type": "boolean"}, "status": {"enum": ["satisfied", "partially_satisfied", "missing", "contradictory", "stale_only", "disqualified"]}}}},
+    "budgets": {"type": "object", "additionalProperties": false, "required": ["max_depth", "max_nodes", "max_tokens", "max_seconds", "max_replans"], "properties": {"max_depth": {"type": "integer", "minimum": 0}, "max_nodes": {"type": "integer", "minimum": 1}, "max_tokens": {"type": "integer", "minimum": 1}, "max_seconds": {"type": "integer", "minimum": 1}, "max_replans": {"type": "integer", "minimum": 0}}}
+  }
+}

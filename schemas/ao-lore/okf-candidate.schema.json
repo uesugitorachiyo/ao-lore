@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/okf-candidate.schema.json",
+  "title": "AO Lore Non-Canonical OKF Candidate v0.1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "candidate_id", "document_ir_digest", "concepts", "claim_mappings", "links", "contradiction_warnings", "canonical", "promotion_authority"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.okf-candidate.v0.1"}, "candidate_id": {"type": "string"},
+    "document_ir_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "concepts": {"type": "array", "items": {"type": "object", "additionalProperties": true}},
+    "claim_mappings": {"type": "array", "items": {"type": "object", "required": ["claim_id", "block_ids"], "properties": {"claim_id": {"type": "string"}, "block_ids": {"type": "array", "items": {"type": "string"}}}}},
+    "links": {"type": "array", "items": {"type": "object", "additionalProperties": true}},
+    "contradiction_warnings": {"type": "array", "items": {"type": "string"}},
+    "canonical": {"const": false}, "promotion_authority": {"const": false}
+  }
+}

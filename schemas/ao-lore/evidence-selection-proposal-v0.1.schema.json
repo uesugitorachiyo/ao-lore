@@ -1,0 +1,307 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/evidence-selection-proposal-v0.1.schema.json",
+  "title": "AO Lore Evidence Selection Proposal v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "proposal_id",
+    "request_digest",
+    "primary_workspace_id",
+    "registry_digest",
+    "definition_digest",
+    "prepared_at",
+    "expires_at",
+    "evidence_selection_digest",
+    "candidate",
+    "allowed_write_set",
+    "allowed_write_set_digest",
+    "evidence",
+    "proposal_digest",
+    "candidate_creation",
+    "legal_advice",
+    "property_decision",
+    "candidate_review",
+    "candidate_decision",
+    "promotion",
+    "canonical_query",
+    "provider",
+    "credential",
+    "private_data",
+    "publication",
+    "release",
+    "deployment",
+    "authority_advanced"
+  ],
+  "properties": {
+    "schema_version": {"const": "ao.lore.evidence-selection-proposal.v0.1"},
+    "proposal_id": {"$ref": "#/$defs/id"},
+    "request_digest": {"$ref": "#/$defs/digest"},
+    "primary_workspace_id": {"$ref": "#/$defs/id"},
+    "registry_digest": {"$ref": "#/$defs/digest"},
+    "definition_digest": {"$ref": "#/$defs/digest"},
+    "prepared_at": {"$ref": "#/$defs/time"},
+    "expires_at": {"$ref": "#/$defs/time"},
+    "evidence_selection_digest": {"$ref": "#/$defs/digest"},
+    "candidate": {"$ref": "#/$defs/candidate_target"},
+    "allowed_write_set": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^candidates/[a-z0-9][a-z0-9._-]{0,127}/(?:candidate\\.json|provenance\\.json|reviews)$",
+        "maxLength": 256
+      }
+    },
+    "allowed_write_set_digest": {"$ref": "#/$defs/digest"},
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {"$ref": "#/$defs/evidence"}
+    },
+    "proposal_digest": {"$ref": "#/$defs/digest"},
+    "candidate_creation": {"const": false},
+    "legal_advice": {"const": false},
+    "property_decision": {"const": false},
+    "candidate_review": {"const": false},
+    "candidate_decision": {"const": false},
+    "promotion": {"const": false},
+    "canonical_query": {"const": false},
+    "provider": {"const": false},
+    "credential": {"const": false},
+    "private_data": {"const": false},
+    "publication": {"const": false},
+    "release": {"const": false},
+    "deployment": {"const": false},
+    "authority_advanced": {"const": false}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "evidence_id": {
+      "type": "string",
+      "pattern": "^(?:sha256:[0-9a-f]{64}|[a-z0-9][a-z0-9._-]{0,127})$"
+    },
+    "media_type": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9!#$&^_.+-]{0,63}/[a-z0-9][a-z0-9!#$&^_.+-]{0,127}$"
+    },
+    "time": {"type": "string", "format": "date-time", "maxLength": 32},
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^(?!/)(?!file:)(?!.*(?:/home/|/opt/|\\\\)).+$"
+    },
+    "qualification_codes": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/id"}
+    },
+    "source_span": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["page", "start", "end"],
+      "properties": {
+        "page": {"type": "integer", "minimum": 1, "maximum": 1000000},
+        "start": {"type": "integer", "minimum": 0, "maximum": 1048576},
+        "end": {"type": "integer", "minimum": 0, "maximum": 1048576}
+      }
+    },
+    "candidate_target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidate_id", "candidate_digest", "provenance_digest"],
+      "properties": {
+        "candidate_id": {"$ref": "#/$defs/id"},
+        "candidate_digest": {"$ref": "#/$defs/digest"},
+        "provenance_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "document_block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workspace_id",
+        "document_store_id",
+        "generation_digest",
+        "document_id",
+        "document_ir_digest",
+        "source_id",
+        "source_digest",
+        "evidence_kind",
+        "evidence_id",
+        "evidence_digest",
+        "block_id",
+        "render_text",
+        "source_span",
+        "authority_role",
+        "sensitivity",
+        "freshness_status",
+        "qualification_codes"
+      ],
+      "properties": {
+        "workspace_id": {"$ref": "#/$defs/id"},
+        "document_store_id": {"$ref": "#/$defs/id"},
+        "generation_digest": {"$ref": "#/$defs/digest"},
+        "document_id": {"$ref": "#/$defs/evidence_id"},
+        "document_ir_digest": {"$ref": "#/$defs/digest"},
+        "source_id": {"$ref": "#/$defs/id"},
+        "source_digest": {"$ref": "#/$defs/digest"},
+        "evidence_kind": {"const": "document_block"},
+        "evidence_id": {"$ref": "#/$defs/evidence_id"},
+        "evidence_digest": {"$ref": "#/$defs/digest"},
+        "block_id": {"$ref": "#/$defs/id"},
+        "render_text": {"$ref": "#/$defs/text"},
+        "source_span": {"$ref": "#/$defs/source_span"},
+        "authority_role": {
+          "enum": [
+            "primary_law",
+            "official_interpretation",
+            "local_enforcement_guidance",
+            "technical_guidance",
+            "operator_procedure",
+            "case_evidence"
+          ]
+        },
+        "sensitivity": {"enum": ["public", "internal", "restricted"]},
+        "freshness_status": {
+          "enum": ["current", "stale", "superseded", "unavailable", "unknown"]
+        },
+        "qualification_codes": {"$ref": "#/$defs/qualification_codes"}
+      }
+    },
+    "graph_claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workspace_id",
+        "graph_id",
+        "graph_digest",
+        "source_id",
+        "source_digest",
+        "evidence_kind",
+        "evidence_id",
+        "evidence_digest",
+        "claim_id",
+        "excerpt",
+        "citation_anchor",
+        "authority_role",
+        "freshness_status",
+        "qualification_codes",
+        "conflict_status",
+        "semantic_review"
+      ],
+      "properties": {
+        "workspace_id": {"$ref": "#/$defs/id"},
+        "graph_id": {"$ref": "#/$defs/id"},
+        "graph_digest": {"$ref": "#/$defs/digest"},
+        "source_id": {"$ref": "#/$defs/id"},
+        "source_digest": {"$ref": "#/$defs/digest"},
+        "evidence_kind": {"const": "graph_claim"},
+        "evidence_id": {"$ref": "#/$defs/evidence_id"},
+        "evidence_digest": {"$ref": "#/$defs/digest"},
+        "claim_id": {"$ref": "#/$defs/id"},
+        "excerpt": {"$ref": "#/$defs/text"},
+        "citation_anchor": {"$ref": "#/$defs/text"},
+        "authority_role": {
+          "enum": [
+            "primary_law",
+            "official_interpretation",
+            "local_enforcement_guidance",
+            "technical_guidance",
+            "operator_procedure",
+            "case_evidence"
+          ]
+        },
+        "freshness_status": {
+          "enum": ["current", "stale", "superseded", "unavailable", "unknown"]
+        },
+        "qualification_codes": {"$ref": "#/$defs/qualification_codes"},
+        "conflict_status": {"enum": ["clear", "conflicted", "investigate"]},
+        "semantic_review": {"const": "verified"}
+      }
+    },
+    "graph_edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workspace_id",
+        "graph_id",
+        "graph_digest",
+        "source_id",
+        "source_digest",
+        "evidence_kind",
+        "evidence_id",
+        "evidence_digest",
+        "edge_id",
+        "source_claim_id",
+        "target_claim_id",
+        "edge_type",
+        "supporting_excerpt_digest",
+        "authority_role",
+        "freshness_status",
+        "qualification_codes",
+        "conflict_status",
+        "semantic_review"
+      ],
+      "properties": {
+        "workspace_id": {"$ref": "#/$defs/id"},
+        "graph_id": {"$ref": "#/$defs/id"},
+        "graph_digest": {"$ref": "#/$defs/digest"},
+        "source_id": {"$ref": "#/$defs/id"},
+        "source_digest": {"$ref": "#/$defs/digest"},
+        "evidence_kind": {"const": "graph_edge"},
+        "evidence_id": {"$ref": "#/$defs/evidence_id"},
+        "evidence_digest": {"$ref": "#/$defs/digest"},
+        "edge_id": {"$ref": "#/$defs/id"},
+        "source_claim_id": {"$ref": "#/$defs/id"},
+        "target_claim_id": {"$ref": "#/$defs/id"},
+        "edge_type": {
+          "enum": [
+            "cites",
+            "defines",
+            "explains",
+            "implements",
+            "applies_locally_to",
+            "provides_remediation_for",
+            "requires_record_of",
+            "qualifies",
+            "supersedes",
+            "effective_from",
+            "conflicts_with"
+          ]
+        },
+        "supporting_excerpt_digest": {"$ref": "#/$defs/digest"},
+        "authority_role": {
+          "enum": [
+            "primary_law",
+            "official_interpretation",
+            "local_enforcement_guidance",
+            "technical_guidance",
+            "operator_procedure",
+            "case_evidence"
+          ]
+        },
+        "freshness_status": {
+          "enum": ["current", "stale", "superseded", "unavailable", "unknown"]
+        },
+        "qualification_codes": {"$ref": "#/$defs/qualification_codes"},
+        "conflict_status": {"enum": ["clear", "conflicted", "investigate"]},
+        "semantic_review": {"const": "verified"}
+      }
+    },
+    "evidence": {
+      "oneOf": [
+        {"$ref": "#/$defs/document_block"},
+        {"$ref": "#/$defs/graph_claim"},
+        {"$ref": "#/$defs/graph_edge"}
+      ]
+    }
+  }
+}

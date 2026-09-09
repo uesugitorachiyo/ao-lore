@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/knowledge-answer-readback-v0.1.schema.json",
+  "title": "AO Lore Knowledge Answer Readback v0.1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "status", "snapshot_digest", "coverage_report_digest", "claim_ids", "evidence_ids", "citations", "legacy_v0_2_entry_count", "answer", "reason_code"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.knowledge-answer-readback.v0.1"}, "status": {"enum": ["answer", "partial", "refuse", "investigate"]},
+    "snapshot_digest": {"$ref": "#/$defs/digest"}, "coverage_report_digest": {"$ref": "#/$defs/digest"},
+    "claim_ids": {"type": "array", "maxItems": 200, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "evidence_ids": {"type": "array", "maxItems": 200, "uniqueItems": true, "items": {"type": "string", "pattern": "^evidence-[0-9a-f]{32}$"}},
+    "citations": {"type": "array", "maxItems": 200, "uniqueItems": true, "items": {"type": "string", "pattern": "^canonical:[a-z0-9][a-z0-9._-]{0,127}#[a-z0-9][a-z0-9._-]{0,127}$", "maxLength": 512}},
+    "legacy_v0_2_entry_count": {"type": "integer", "minimum": 0, "maximum": 10000}, "answer": {"type": "string", "maxLength": 32768},
+    "reason_code": {"enum": ["none", "no_answerable_entries", "legacy_metadata_only", "coverage_insufficient", "hard_contradiction", "freshness_gate_failed", "trust_gate_failed", "canonical_state_invalid", "unsupported_active_version", "snapshot_drift"]}
+  },
+  "$defs": {"id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"}, "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}
+}

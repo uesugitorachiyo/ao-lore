@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/knowledge-search-readback-v0.1.schema.json",
+  "title": "AO Lore Knowledge Search Readback v0.1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "status", "snapshot_digest", "query_digest", "hits", "legacy_v0_2_entry_count", "answerable_v0_3_entry_count"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.knowledge-search-readback.v0.1"}, "status": {"const": "completed"},
+    "snapshot_digest": {"$ref": "#/$defs/digest"}, "query_digest": {"$ref": "#/$defs/digest"},
+    "hits": {"type": "array", "maxItems": 200, "items": {"oneOf": [{"$ref": "#/$defs/answerable_hit"}, {"$ref": "#/$defs/metadata_hit"}]}},
+    "legacy_v0_2_entry_count": {"$ref": "#/$defs/count"}, "answerable_v0_3_entry_count": {"$ref": "#/$defs/count"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"}, "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "count": {"type": "integer", "minimum": 0, "maximum": 10000}, "text": {"type": "string", "minLength": 1, "maxLength": 1024},
+    "score": {"type": "object", "additionalProperties": false, "required": ["claim_exact_match", "claim_substring_match", "matched_claim_token_count", "matched_citation_token_count"], "properties": {"claim_exact_match": {"type": "boolean"}, "claim_substring_match": {"type": "boolean"}, "matched_claim_token_count": {"type": "integer", "minimum": 0, "maximum": 256}, "matched_citation_token_count": {"type": "integer", "minimum": 0, "maximum": 256}}},
+    "answerable_hit": {"type": "object", "additionalProperties": false, "required": ["classification", "evidence_id", "canonical_entry_id", "claim_id", "citation_id", "claim_text", "citation", "source_ref", "score_components"], "properties": {"classification": {"const": "answerable"}, "evidence_id": {"type": "string", "pattern": "^evidence-[0-9a-f]{32}$"}, "canonical_entry_id": {"$ref": "#/$defs/id"}, "claim_id": {"$ref": "#/$defs/id"}, "citation_id": {"$ref": "#/$defs/id"}, "claim_text": {"$ref": "#/$defs/text"}, "citation": {"type": "string", "minLength": 1, "maxLength": 512}, "source_ref": {"type": "string", "pattern": "^canonical:[a-z0-9][a-z0-9._-]{0,127}#[a-z0-9][a-z0-9._-]{0,127}$", "maxLength": 512}, "score_components": {"$ref": "#/$defs/score"}}},
+    "metadata_hit": {"type": "object", "additionalProperties": false, "required": ["classification", "canonical_entry_id", "concept_id", "concept_title"], "properties": {"classification": {"const": "metadata_only"}, "canonical_entry_id": {"$ref": "#/$defs/id"}, "concept_id": {"$ref": "#/$defs/id"}, "concept_title": {"type": "string", "minLength": 1, "maxLength": 256}}}
+  }
+}

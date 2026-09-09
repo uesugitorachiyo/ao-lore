@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "https://schemas.ao-lore.example/promotion-transaction-v0.1.schema.json",
+  "title": "AO Lore Promotion Transaction v0.1", "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "transaction_id", "transaction_intent_digest", "promotion_id", "operation", "proposal_digest", "authorization_id", "authorization_digest", "prior_brain_inventory_digest", "result_brain_inventory_digest", "result_generation_id", "result_manifest_digest", "allowed_write_set_digest", "status", "committed_at", "transaction_digest"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.promotion-transaction.v0.1"}, "transaction_id": {"$ref": "#/$defs/id"}, "transaction_intent_digest": {"$ref": "#/$defs/digest"},
+    "promotion_id": {"$ref": "#/$defs/id"}, "operation": {"enum": ["apply", "rollback"]}, "proposal_digest": {"$ref": "#/$defs/digest"},
+    "authorization_id": {"$ref": "#/$defs/id"}, "authorization_digest": {"$ref": "#/$defs/digest"}, "prior_brain_inventory_digest": {"$ref": "#/$defs/digest"},
+    "result_brain_inventory_digest": {"$ref": "#/$defs/digest"}, "result_generation_id": {"$ref": "#/$defs/id"}, "result_manifest_digest": {"$ref": "#/$defs/digest"},
+    "allowed_write_set_digest": {"$ref": "#/$defs/digest"}, "status": {"const": "committed"}, "committed_at": {"$ref": "#/$defs/time"}, "transaction_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {"id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"}, "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}, "time": {"type": "string", "format": "date-time", "maxLength": 32}}
+}

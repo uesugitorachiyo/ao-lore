@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/candidate-quality-summary-v0.1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "summary_id",
+    "campaign_id",
+    "correlation_id",
+    "terminal_readback_digest",
+    "campaign_digest",
+    "total_candidate_count",
+    "total_sampled_claim_count",
+    "total_question_count",
+    "candidate_recommendations",
+    "corpus_recommendation",
+    "summary_digest",
+    "canonical_query_invoked",
+    "review_event_appended",
+    "candidate_decision_taken",
+    "promotion_prepared",
+    "promotion_applied",
+    "provider_calls",
+    "network_accessed",
+    "credential_used",
+    "publication",
+    "release",
+    "deployment",
+    "authority_advanced"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ao.lore.candidate-quality-summary.v0.1"
+    },
+    "summary_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "campaign_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "correlation_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "terminal_readback_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "campaign_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "total_candidate_count": {
+      "type": "integer",
+      "const": 6
+    },
+    "total_sampled_claim_count": {
+      "type": "integer",
+      "const": 96
+    },
+    "total_question_count": {
+      "type": "integer",
+      "const": 24
+    },
+    "candidate_recommendations": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "candidate_id",
+          "recommendation",
+          "result_digest"
+        ],
+        "properties": {
+          "candidate_id": {
+            "$ref": "#/$defs/identifier"
+          },
+          "recommendation": {
+            "enum": [
+              "pass",
+              "hold",
+              "reject"
+            ]
+          },
+          "result_digest": {
+            "$ref": "#/$defs/digest"
+          }
+        }
+      }
+    },
+    "corpus_recommendation": {
+      "enum": [
+        "pass",
+        "hold",
+        "reject"
+      ]
+    },
+    "summary_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "canonical_query_invoked": {
+      "const": false
+    },
+    "review_event_appended": {
+      "const": false
+    },
+    "candidate_decision_taken": {
+      "const": false
+    },
+    "promotion_prepared": {
+      "const": false
+    },
+    "promotion_applied": {
+      "const": false
+    },
+    "provider_calls": {
+      "const": false
+    },
+    "network_accessed": {
+      "const": false
+    },
+    "credential_used": {
+      "const": false
+    },
+    "publication": {
+      "const": false
+    },
+    "release": {
+      "const": false
+    },
+    "deployment": {
+      "const": false
+    },
+    "authority_advanced": {
+      "const": false
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}

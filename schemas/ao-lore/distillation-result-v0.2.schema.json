@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/distillation-result-v0.2.schema.json",
+  "title": "AO Lore Distillation Result v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "candidate", "candidate_digest", "distillation_trace"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.distillation-result.v0.2"},
+    "candidate": {"$ref": "okf-candidate-v0.2.schema.json"},
+    "candidate_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "distillation_trace": {
+      "type": "object", "additionalProperties": false,
+      "required": ["adapter", "policy_version", "input_block_count", "candidate_concept_count", "candidate_claim_count", "candidate_citation_count", "private_reasoning_persisted"],
+      "properties": {
+        "adapter": {"type": "string", "minLength": 1, "maxLength": 128},
+        "policy_version": {"type": "string", "minLength": 1, "maxLength": 128},
+        "input_block_count": {"type": "integer", "minimum": 0, "maximum": 100000},
+        "candidate_concept_count": {"type": "integer", "minimum": 0, "maximum": 10000},
+        "candidate_claim_count": {"type": "integer", "minimum": 0, "maximum": 5000},
+        "candidate_citation_count": {"type": "integer", "minimum": 0, "maximum": 5000},
+        "private_reasoning_persisted": {"const": false}
+      }
+    }
+  }
+}

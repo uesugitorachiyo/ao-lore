@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/monitoring-baseline-v0.1.schema.json",
+  "title": "AO Lore Monitoring Baseline v0.1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "baseline_id",
+    "target_id",
+    "source_head_sha256",
+    "profile_sha256",
+    "generated_at_utc",
+    "valid_until_utc",
+    "metrics",
+    "tolerances",
+    "allowed_role_fallbacks",
+    "trace_policy_sha256"
+  ],
+  "properties": {
+    "schema_version": { "const": "ao.lore.monitoring-baseline.v0.1" },
+    "baseline_id": { "$ref": "#/$defs/id" },
+    "target_id": { "$ref": "#/$defs/id" },
+    "source_head_sha256": { "$ref": "#/$defs/sha256" },
+    "profile_sha256": { "$ref": "#/$defs/sha256" },
+    "generated_at_utc": { "type": "string", "format": "date-time" },
+    "valid_until_utc": { "type": "string", "format": "date-time" },
+    "metrics": { "$ref": "#/$defs/metrics" },
+    "tolerances": {
+      "type": "object",
+      "required": [
+        "max_parser_score_drop_basis_points",
+        "max_threshold_change_basis_points",
+        "max_coverage_drop_basis_points",
+        "max_wasted_traversal_increase",
+        "max_nodes_per_requirement_increase_milli",
+        "max_tokens_per_coverage_increase_milli"
+      ],
+      "properties": {
+        "max_parser_score_drop_basis_points": { "$ref": "#/$defs/boundedNonnegative" },
+        "max_threshold_change_basis_points": { "$ref": "#/$defs/boundedNonnegative" },
+        "max_coverage_drop_basis_points": { "$ref": "#/$defs/boundedNonnegative" },
+        "max_wasted_traversal_increase": { "$ref": "#/$defs/boundedNonnegative" },
+        "max_nodes_per_requirement_increase_milli": { "$ref": "#/$defs/boundedNonnegative" },
+        "max_tokens_per_coverage_increase_milli": { "$ref": "#/$defs/boundedNonnegative" }
+      },
+      "additionalProperties": false
+    },
+    "allowed_role_fallbacks": {
+      "type": "object",
+      "required": ["parser", "distiller", "navigator", "synthesizer"],
+      "properties": {
+        "parser": { "$ref": "#/$defs/transitions" },
+        "distiller": { "$ref": "#/$defs/transitions" },
+        "navigator": { "$ref": "#/$defs/transitions" },
+        "synthesizer": { "$ref": "#/$defs/transitions" }
+      },
+      "additionalProperties": false
+    },
+    "trace_policy_sha256": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$" },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "basisPoints": { "type": "integer", "minimum": 0, "maximum": 10000 },
+    "boundedNonnegative": { "type": "integer", "minimum": 0, "maximum": 1000000000 },
+    "metrics": {
+      "type": "object",
+      "required": [
+        "parser_selection_score_basis_points",
+        "parse_quality_threshold_basis_points",
+        "evidence_coverage_basis_points",
+        "wasted_traversal_nodes",
+        "nodes_per_satisfied_requirement_milli",
+        "tokens_per_coverage_point_milli"
+      ],
+      "properties": {
+        "parser_selection_score_basis_points": { "$ref": "#/$defs/basisPoints" },
+        "parse_quality_threshold_basis_points": { "$ref": "#/$defs/basisPoints" },
+        "evidence_coverage_basis_points": { "$ref": "#/$defs/basisPoints" },
+        "wasted_traversal_nodes": { "$ref": "#/$defs/boundedNonnegative" },
+        "nodes_per_satisfied_requirement_milli": { "$ref": "#/$defs/boundedNonnegative" },
+        "tokens_per_coverage_point_milli": { "$ref": "#/$defs/boundedNonnegative" }
+      },
+      "additionalProperties": false
+    },
+    "transitions": {
+      "type": "array",
+      "maxItems": 20,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*->[a-z0-9][a-z0-9._-]*$" }
+    }
+  },
+  "additionalProperties": false
+}

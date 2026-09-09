@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/monitoring-verdict-v0.1.schema.json",
+  "title": "AO Lore Monitoring Verdict v0.1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "observation_id",
+    "target_id",
+    "baseline_id",
+    "baseline_status",
+    "baseline_source_head_sha256",
+    "observed_source_head_sha256",
+    "input_digests",
+    "status",
+    "findings",
+    "metric_deltas",
+    "observed_metrics",
+    "role_fallbacks",
+    "trace_integrity",
+    "promoter_hold_required",
+    "mutates_live_state",
+    "approves_work",
+    "promotes_candidate",
+    "releases_or_publishes"
+  ],
+  "properties": {
+    "schema_version": { "const": "ao.lore.monitoring-verdict.v0.1" },
+    "observation_id": { "$ref": "#/$defs/id" },
+    "target_id": { "$ref": "#/$defs/id" },
+    "baseline_id": { "type": ["string", "null"], "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$" },
+    "baseline_status": { "enum": ["missing", "present", "stale"] },
+    "baseline_source_head_sha256": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" },
+    "observed_source_head_sha256": { "$ref": "#/$defs/sha256" },
+    "input_digests": {
+      "type": "object",
+      "required": ["baseline_sha256", "observation_sha256"],
+      "properties": {
+        "baseline_sha256": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" },
+        "observation_sha256": { "$ref": "#/$defs/sha256" }
+      },
+      "additionalProperties": false
+    },
+    "status": { "enum": ["clear", "hold", "incident"] },
+    "findings": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "required": ["code", "severity", "reason"],
+        "properties": {
+          "code": { "$ref": "#/$defs/id" },
+          "severity": { "enum": ["hold", "incident"] },
+          "reason": { "type": "string", "minLength": 1, "maxLength": 512 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "metric_deltas": {
+      "type": "object",
+      "properties": {
+        "parser_selection_score_basis_points": { "type": "integer" },
+        "parse_quality_threshold_basis_points": { "type": "integer" },
+        "evidence_coverage_basis_points": { "type": "integer" },
+        "wasted_traversal_nodes": { "type": "integer" },
+        "nodes_per_satisfied_requirement_milli": { "type": "integer" },
+        "tokens_per_coverage_point_milli": { "type": "integer" }
+      },
+      "additionalProperties": false
+    },
+    "observed_metrics": { "$ref": "#/$defs/metrics" },
+    "role_fallbacks": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "required": ["role", "from_adapter", "to_adapter"],
+        "properties": {
+          "role": { "enum": ["parser", "distiller", "navigator", "synthesizer"] },
+          "from_adapter": { "$ref": "#/$defs/id" },
+          "to_adapter": { "$ref": "#/$defs/id" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "trace_integrity": { "type": "boolean" },
+    "promoter_hold_required": { "type": "boolean" },
+    "mutates_live_state": { "const": false },
+    "approves_work": { "const": false },
+    "promotes_candidate": { "const": false },
+    "releases_or_publishes": { "const": false }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$" },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "basisPoints": { "type": "integer", "minimum": 0, "maximum": 10000 },
+    "boundedNonnegative": { "type": "integer", "minimum": 0, "maximum": 1000000000 },
+    "metrics": {
+      "type": "object",
+      "required": [
+        "parser_selection_score_basis_points",
+        "parse_quality_threshold_basis_points",
+        "evidence_coverage_basis_points",
+        "wasted_traversal_nodes",
+        "nodes_per_satisfied_requirement_milli",
+        "tokens_per_coverage_point_milli"
+      ],
+      "properties": {
+        "parser_selection_score_basis_points": { "$ref": "#/$defs/basisPoints" },
+        "parse_quality_threshold_basis_points": { "$ref": "#/$defs/basisPoints" },
+        "evidence_coverage_basis_points": { "$ref": "#/$defs/basisPoints" },
+        "wasted_traversal_nodes": { "$ref": "#/$defs/boundedNonnegative" },
+        "nodes_per_satisfied_requirement_milli": { "$ref": "#/$defs/boundedNonnegative" },
+        "tokens_per_coverage_point_milli": { "$ref": "#/$defs/boundedNonnegative" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

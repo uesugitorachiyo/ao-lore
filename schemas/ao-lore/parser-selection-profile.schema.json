@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/parser-selection-profile.schema.json",
+  "title": "AO Lore Parser Selection Weight Profile v0.1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "profile_id", "version", "media_type", "workload", "normalization", "weights", "missing_optional_policy", "tie_break_order", "fixture_corpus_digest"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.parser-selection-profile.v0.1"},
+    "profile_id": {"type": "string", "minLength": 1}, "version": {"type": "string", "minLength": 1},
+    "media_type": {"type": "string", "minLength": 1}, "workload": {"type": "string", "minLength": 1},
+    "normalization": {"enum": ["bounded_reference", "robust_min_max"]},
+    "normalization_bounds": {"type": "object", "additionalProperties": {"type": "array", "prefixItems": [{"type": "number"}, {"type": "number"}], "minItems": 2, "maxItems": 2}},
+    "weights": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "number", "minimum": 0, "maximum": 1}},
+    "penalty_weights": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0, "maximum": 1}},
+    "required_capabilities": {"type": "array", "items": {"type": "string"}},
+    "missing_optional_policy": {"enum": ["conservative_prior", "ineligible", "ignore_and_renormalize"]},
+    "tie_break_order": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "minimum_benchmark_samples": {"type": "integer", "minimum": 1},
+    "fixture_corpus_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}

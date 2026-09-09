@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "https://schemas.ao-lore.example/knowledge-status-readback-v0.2.schema.json", "title": "AO Lore Knowledge Status Readback v0.2",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "status", "snapshot_digest", "latest_generation_id", "latest_generation_manifest_digest", "generation_count", "effective_entry_count", "answerable_v0_3_entry_count", "answerable_v0_4_entry_count", "legacy_v0_2_entry_count", "claim_count", "answerability_status"],
+  "properties": {"schema_version": {"const": "ao.lore.knowledge-status-readback.v0.2"}, "status": {"const": "completed"}, "snapshot_digest": {"$ref": "#/$defs/digest"}, "latest_generation_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]}, "latest_generation_manifest_digest": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/digest"}]}, "generation_count": {"$ref": "#/$defs/count"}, "effective_entry_count": {"$ref": "#/$defs/count"}, "answerable_v0_3_entry_count": {"$ref": "#/$defs/count"}, "answerable_v0_4_entry_count": {"type": "integer", "minimum": 1, "maximum": 10000}, "legacy_v0_2_entry_count": {"$ref": "#/$defs/count"}, "claim_count": {"type": "integer", "minimum": 0, "maximum": 50000000}, "answerability_status": {"enum": ["empty", "legacy_only", "mixed_version_partial", "fully_answerable"]}},
+  "$defs": {"id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"}, "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}, "count": {"type": "integer", "minimum": 0, "maximum": 10000}}
+}

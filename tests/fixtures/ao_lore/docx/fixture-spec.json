@@ -1,0 +1,194 @@
+{
+  "schema_version": "ao.lore.docx-fixture-corpus.v0.1",
+  "fixtures": [
+    {
+      "id": "minimal-paragraph",
+      "file": "minimal-paragraph.docx",
+      "sha256": "sha256:85d40f59ff35af0fa98879704bdde4a69def9578cb0c606e776a2bd30332b6fc",
+      "paragraphs": [
+        {
+          "text": "Public DOCX Evidence",
+          "style": "Heading1"
+        },
+        {
+          "text": "Deterministic local parsing only."
+        }
+      ],
+      "tables": [],
+      "nested_tables": [],
+      "hyperlinks": [],
+      "footnotes": [],
+      "endnotes": [],
+      "media": []
+    },
+    {
+      "id": "hierarchy-and-list",
+      "file": "hierarchy-and-list.docx",
+      "sha256": "sha256:bb94af5212ecefd71b205a47dbf4721beed73d973ca3db43d794d98e7f3acfc9",
+      "paragraphs": [
+        {
+          "text": "Hierarchy Fixture",
+          "style": "Heading1"
+        },
+        {
+          "text": "Subsection",
+          "style": "Heading2"
+        },
+        {
+          "text": "Primary bullet",
+          "list_level": 0
+        },
+        {
+          "text": "Nested bullet",
+          "list_level": 1
+        }
+      ],
+      "tables": [],
+      "nested_tables": [],
+      "hyperlinks": [],
+      "footnotes": [],
+      "endnotes": [],
+      "media": []
+    },
+    {
+      "id": "nested-table",
+      "file": "nested-table.docx",
+      "sha256": "sha256:c8e2b50362913c27f9114fda34f09a61506ed74ee40d818a9fb6f5acfab9def1",
+      "paragraphs": [
+        {
+          "text": "Nested Table Fixture",
+          "style": "Heading1"
+        }
+      ],
+      "tables": [
+        [
+          [
+            "Outer left",
+            "Outer right"
+          ],
+          [
+            "Outer bottom left",
+            "Outer bottom right"
+          ]
+        ]
+      ],
+      "nested_tables": [
+        {
+          "table_index": 0,
+          "row_index": 0,
+          "cell_index": 1,
+          "rows": [
+            [
+              "Inner 1",
+              "Inner 2"
+            ],
+            [
+              "Inner 3",
+              "Inner 4"
+            ]
+          ]
+        }
+      ],
+      "hyperlinks": [],
+      "footnotes": [],
+      "endnotes": [],
+      "media": []
+    },
+    {
+      "id": "links-and-notes",
+      "file": "links-and-notes.docx",
+      "sha256": "sha256:bbd43e19b078a91353b1e172be1e07297622cf94a81a6f20994bb0c37be54bf3",
+      "paragraphs": [
+        {
+          "text": "Links And Notes",
+          "style": "Heading1"
+        }
+      ],
+      "tables": [],
+      "nested_tables": [],
+      "hyperlinks": [
+        [
+          "Public link",
+          "https://example.invalid/docx-link"
+        ]
+      ],
+      "footnotes": [
+        "Public footnote."
+      ],
+      "endnotes": [
+        "Public endnote."
+      ],
+      "media": []
+    },
+    {
+      "id": "media-and-drawing",
+      "file": "media-and-drawing.docx",
+      "sha256": "sha256:e6ddff0e41b644c770c1663716d6a49259f309a498571db0044a385b5cc20df2",
+      "paragraphs": [
+        {
+          "text": "Media Fixture",
+          "style": "Heading1"
+        }
+      ],
+      "tables": [],
+      "nested_tables": [],
+      "hyperlinks": [],
+      "footnotes": [],
+      "endnotes": [],
+      "media": [
+        {
+          "name": "pixel.bin",
+          "hex": "89504E4700",
+          "content_type": "application/octet-stream"
+        }
+      ]
+    },
+    {
+      "id": "mixed-structure",
+      "file": "mixed-structure.docx",
+      "sha256": "sha256:b2c32389c0b32af1f77ad712232e5bf9091c771486d75a3a02da58d2a56bf267",
+      "paragraphs": [
+        {
+          "text": "Mixed Fixture",
+          "style": "Heading1"
+        },
+        {
+          "text": "List item",
+          "list_level": 0
+        }
+      ],
+      "tables": [
+        [
+          [
+            "Header A",
+            "Header B"
+          ],
+          [
+            "Value A",
+            "Value B"
+          ]
+        ]
+      ],
+      "nested_tables": [],
+      "hyperlinks": [
+        [
+          "Mixed link",
+          "https://example.invalid/mixed-docx"
+        ]
+      ],
+      "footnotes": [
+        "Mixed footnote."
+      ],
+      "endnotes": [
+        "Mixed endnote."
+      ],
+      "media": [
+        {
+          "name": "mixed.bin",
+          "hex": "01020304",
+          "content_type": "application/octet-stream"
+        }
+      ]
+    }
+  ]
+}

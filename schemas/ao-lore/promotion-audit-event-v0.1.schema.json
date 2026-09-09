@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "https://schemas.ao-lore.example/promotion-audit-event-v0.1.schema.json",
+  "title": "AO Lore Promotion Audit Event v0.1", "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "sequence", "event_type", "promotion_id", "authorization_id", "transaction_id", "proposal_digest", "authorization_digest", "transaction_digest", "previous_event_digest", "recorded_at", "status", "reason_code", "event_digest"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.promotion-audit-event.v0.1"}, "sequence": {"type": "integer", "minimum": 1, "maximum": 100000},
+    "event_type": {"enum": ["prepare_started", "prepare_succeeded", "prepare_rejected", "apply_started", "apply_committed", "apply_rejected", "inspect", "recover_started", "recover_completed", "recover_investigate", "rollback_prepared", "rollback_started", "rollback_committed", "rollback_rejected"]},
+    "promotion_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]}, "authorization_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]}, "transaction_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]},
+    "proposal_digest": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/digest"}]}, "authorization_digest": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/digest"}]}, "transaction_digest": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/digest"}]},
+    "previous_event_digest": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/digest"}]}, "recorded_at": {"$ref": "#/$defs/time"}, "status": {"enum": ["started", "succeeded", "rejected", "committed", "completed", "investigate"]},
+    "reason_code": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,63}$"}, "event_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {"id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"}, "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}, "time": {"type": "string", "format": "date-time", "maxLength": 32}}
+}

@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/candidate-quality-recovery-v0.1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "recovery_id",
+    "campaign_id",
+    "campaign_digest",
+    "phase",
+    "status",
+    "retained_artifact_digests",
+    "owned_staging_relpaths",
+    "recovery_digest",
+    "canonical_query_invoked",
+    "review_event_appended",
+    "candidate_decision_taken",
+    "promotion_prepared",
+    "promotion_applied",
+    "provider_calls",
+    "network_accessed",
+    "credential_used",
+    "publication",
+    "release",
+    "deployment",
+    "authority_advanced"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ao.lore.candidate-quality-recovery.v0.1"
+    },
+    "recovery_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "campaign_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "campaign_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "phase": {
+      "enum": [
+        "intake",
+        "verification",
+        "sampling",
+        "annotation",
+        "questions",
+        "summary"
+      ]
+    },
+    "status": {
+      "enum": [
+        "staged",
+        "interrupted",
+        "ready_to_resume",
+        "completed"
+      ]
+    },
+    "retained_artifact_digests": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {
+        "$ref": "#/$defs/digest"
+      }
+    },
+    "owned_staging_relpaths": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 256,
+        "pattern": "^[a-z0-9][a-z0-9._-]{0,63}(?:/[a-z0-9][a-z0-9._-]{0,63}){0,7}$"
+      }
+    },
+    "recovery_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "canonical_query_invoked": {
+      "const": false
+    },
+    "review_event_appended": {
+      "const": false
+    },
+    "candidate_decision_taken": {
+      "const": false
+    },
+    "promotion_prepared": {
+      "const": false
+    },
+    "promotion_applied": {
+      "const": false
+    },
+    "provider_calls": {
+      "const": false
+    },
+    "network_accessed": {
+      "const": false
+    },
+    "credential_used": {
+      "const": false
+    },
+    "publication": {
+      "const": false
+    },
+    "release": {
+      "const": false
+    },
+    "deployment": {
+      "const": false
+    },
+    "authority_advanced": {
+      "const": false
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}

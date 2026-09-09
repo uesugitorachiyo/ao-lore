@@ -1,0 +1,14 @@
+{
+  "schema_version": "ao.lore.parser-fixture-corpus.v0.1",
+  "corpus_id": "ao-lore-public-safe-synthetic-v0.1",
+  "review_status": "deterministically_generated_expectations",
+  "fixtures": [
+    {"id": "pdf-digital-layout", "media_type": "application/pdf", "condition": "clean-digital", "features": ["headings", "tables", "links", "code", "images", "captions", "footnotes", "source_coordinates", "multi_column"], "expected": {"heading_count": 4, "table_count": 1, "reading_columns": 2}},
+    {"id": "pdf-degraded-scan", "media_type": "application/pdf", "condition": "degraded-scan", "features": ["ocr", "layout", "tables", "images", "captions", "source_coordinates"], "expected": {"readable_regions": 8, "table_count": 1}},
+    {"id": "markdown-native", "media_type": "text/markdown", "condition": "clean-digital", "features": ["headings", "links", "code", "footnotes"], "source_text": "# Heading\n\nA [link](https://example.invalid).\n\n```python\nprint('safe')\n```\n\n[^1]: note", "expected": {"heading_count": 1, "link_count": 1, "code_block_count": 1, "footnote_count": 1}},
+    {"id": "html-structural", "media_type": "text/html", "condition": "clean-digital", "features": ["headings", "links", "tables", "images", "captions"], "source_text": "<h1>Heading</h1><a href='https://example.invalid'>link</a><table><tr><td>cell</td></tr></table><figure><img alt='diagram'><figcaption>caption</figcaption></figure>", "expected": {"heading_count": 1, "link_count": 1, "table_count": 1, "caption_count": 1}},
+    {"id": "docx-contract-structure", "media_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "condition": "clean-digital", "features": ["headings", "tables", "links", "footnotes"], "expected": {"heading_count": 3, "table_count": 2, "footnote_count": 2}},
+    {"id": "plain-text-direct", "media_type": "text/plain", "condition": "clean-digital", "features": ["text"], "source_text": "Deterministic plain text fixture.\nSecond line.", "expected": {"line_count": 2}},
+    {"id": "image-ocr-layout", "media_type": "image/png", "condition": "degraded-image", "features": ["ocr", "layout", "images", "captions", "source_coordinates"], "expected": {"readable_regions": 3, "caption_count": 1}}
+  ]
+}

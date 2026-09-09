@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "https://schemas.ao-lore.example/promotion-authorization-v0.1.schema.json",
+  "title": "AO Lore Promotion Authorization v0.1", "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "policy_version", "operation", "authorization_id", "nonce", "operator_id", "authentication_scope", "proposal_digest", "promotion_id", "candidate_digest", "provenance_digest", "accepted_review_head_digest", "canonical_entry_digest", "expected_brain_inventory_digest", "expected_prior_generation_id", "expected_result_generation_id", "allowed_write_set_digest", "source_head", "issued_at", "expires_at", "one_use_only", "product_self_issued", "provider_authority", "network_authority", "publication_authority", "release_authority", "deployment_authority", "batch_authority", "overwrite_authority", "unattended_authority", "credential_authority", "authority_advance"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.promotion-authorization.v0.1"}, "policy_version": {"const": "ao.lore.promotion-policy.v0.1"}, "operation": {"enum": ["apply", "rollback"]},
+    "authorization_id": {"$ref": "#/$defs/id"}, "nonce": {"$ref": "#/$defs/id"}, "operator_id": {"$ref": "#/$defs/text"}, "authentication_scope": {"const": "local_operator_assertion"},
+    "proposal_digest": {"$ref": "#/$defs/digest"}, "promotion_id": {"$ref": "#/$defs/id"}, "candidate_digest": {"$ref": "#/$defs/digest"}, "provenance_digest": {"$ref": "#/$defs/digest"},
+    "accepted_review_head_digest": {"$ref": "#/$defs/digest"}, "canonical_entry_digest": {"$ref": "#/$defs/digest"}, "expected_brain_inventory_digest": {"$ref": "#/$defs/digest"},
+    "expected_prior_generation_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]}, "expected_result_generation_id": {"$ref": "#/$defs/id"}, "allowed_write_set_digest": {"$ref": "#/$defs/digest"},
+    "source_head": {"type": "string", "pattern": "^[0-9a-f]{40}$"}, "issued_at": {"$ref": "#/$defs/time"}, "expires_at": {"$ref": "#/$defs/time"},
+    "one_use_only": {"const": true}, "product_self_issued": {"const": false}, "provider_authority": {"const": false}, "network_authority": {"const": false},
+    "publication_authority": {"const": false}, "release_authority": {"const": false}, "deployment_authority": {"const": false}, "batch_authority": {"const": false},
+    "overwrite_authority": {"const": false}, "unattended_authority": {"const": false}, "credential_authority": {"const": false}, "authority_advance": {"const": false}
+  },
+  "$defs": {"id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"}, "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}, "text": {"type": "string", "minLength": 1, "maxLength": 256}, "time": {"type": "string", "format": "date-time", "maxLength": 32}}
+}

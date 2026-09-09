@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/evidence-selection-request-v0.1.schema.json",
+  "title": "AO Lore Evidence Selection Request v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "request_id",
+    "primary_workspace_id",
+    "registry_digest",
+    "requested_at",
+    "evidence_ids",
+    "request_digest",
+    "candidate_creation",
+    "legal_advice",
+    "property_decision",
+    "candidate_review",
+    "candidate_decision",
+    "promotion",
+    "canonical_query",
+    "provider",
+    "credential",
+    "private_data",
+    "publication",
+    "release",
+    "deployment",
+    "authority_advanced"
+  ],
+  "properties": {
+    "schema_version": {"const": "ao.lore.evidence-selection-request.v0.1"},
+    "request_id": {"$ref": "#/$defs/id"},
+    "primary_workspace_id": {"$ref": "#/$defs/id"},
+    "registry_digest": {"$ref": "#/$defs/digest"},
+    "requested_at": {"$ref": "#/$defs/time"},
+    "evidence_ids": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/evidence_id"}
+    },
+    "request_digest": {"$ref": "#/$defs/digest"},
+    "candidate_creation": {"const": false},
+    "legal_advice": {"const": false},
+    "property_decision": {"const": false},
+    "candidate_review": {"const": false},
+    "candidate_decision": {"const": false},
+    "promotion": {"const": false},
+    "canonical_query": {"const": false},
+    "provider": {"const": false},
+    "credential": {"const": false},
+    "private_data": {"const": false},
+    "publication": {"const": false},
+    "release": {"const": false},
+    "deployment": {"const": false},
+    "authority_advanced": {"const": false}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "evidence_id": {
+      "type": "string",
+      "pattern": "^(?:sha256:[0-9a-f]{64}|[a-z0-9][a-z0-9._-]{0,127})$"
+    },
+    "time": {"type": "string", "format": "date-time", "maxLength": 32}
+  }
+}

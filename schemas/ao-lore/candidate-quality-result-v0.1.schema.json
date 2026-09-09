@@ -1,0 +1,370 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/candidate-quality-result-v0.1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "result_id",
+    "campaign_id",
+    "candidate_id",
+    "candidate_digest",
+    "provenance_digest",
+    "source_digest",
+    "sample_digest",
+    "annotations_digest",
+    "questions_digest",
+    "question_results_digest",
+    "total_candidate_claim_count",
+    "sampled_claim_count",
+    "question_count",
+    "classification_counts",
+    "question_outcome_counts",
+    "automatic_check_counts",
+    "recommendation",
+    "result_digest",
+    "canonical_query_invoked",
+    "review_event_appended",
+    "candidate_decision_taken",
+    "promotion_prepared",
+    "promotion_applied",
+    "provider_calls",
+    "network_accessed",
+    "credential_used",
+    "publication",
+    "release",
+    "deployment",
+    "authority_advanced"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ao.lore.candidate-quality-result.v0.1"
+    },
+    "result_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "campaign_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "candidate_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "candidate_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "provenance_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "source_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "sample_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "annotations_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "questions_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "question_results_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "total_candidate_claim_count": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 486
+    },
+    "sampled_claim_count": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 289
+    },
+    "question_count": {
+      "type": "integer",
+      "const": 4
+    },
+    "classification_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "useful_exact",
+        "exact_but_fragmented",
+        "exact_but_low_value",
+        "duplicate",
+        "misleading_without_context",
+        "binding_error"
+      ],
+      "properties": {
+        "useful_exact": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 96
+        },
+        "exact_but_fragmented": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 96
+        },
+        "exact_but_low_value": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 96
+        },
+        "duplicate": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 96
+        },
+        "misleading_without_context": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 96
+        },
+        "binding_error": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 96
+        }
+      }
+    },
+    "question_outcome_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "supported",
+        "refusal",
+        "mismatch"
+      ],
+      "properties": {
+        "supported": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
+        },
+        "refusal": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
+        },
+        "mismatch": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
+        }
+      }
+    },
+    "automatic_check_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "verified_claim_count",
+        "verified_citation_count",
+        "duplicate_suspect_count",
+        "fragmentation_suspect_count",
+        "binding_error_count"
+      ],
+      "properties": {
+        "verified_claim_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 486
+        },
+        "verified_citation_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 486
+        },
+        "duplicate_suspect_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 486
+        },
+        "fragmentation_suspect_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 486
+        },
+        "binding_error_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 486
+        }
+      }
+    },
+    "recommendation": {
+      "enum": [
+        "pass",
+        "hold",
+        "reject"
+      ]
+    },
+    "result_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "canonical_query_invoked": {
+      "const": false
+    },
+    "review_event_appended": {
+      "const": false
+    },
+    "candidate_decision_taken": {
+      "const": false
+    },
+    "promotion_prepared": {
+      "const": false
+    },
+    "promotion_applied": {
+      "const": false
+    },
+    "provider_calls": {
+      "const": false
+    },
+    "network_accessed": {
+      "const": false
+    },
+    "credential_used": {
+      "const": false
+    },
+    "publication": {
+      "const": false
+    },
+    "release": {
+      "const": false
+    },
+    "deployment": {
+      "const": false
+    },
+    "authority_advanced": {
+      "const": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "candidate_id": {
+            "const": "candidate-01"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "total_candidate_claim_count": {
+            "const": 19
+          },
+          "sampled_claim_count": {
+            "const": 19
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "candidate_id": {
+            "const": "candidate-02"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "total_candidate_claim_count": {
+            "const": 13
+          },
+          "sampled_claim_count": {
+            "const": 13
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "candidate_id": {
+            "const": "candidate-03"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "total_candidate_claim_count": {
+            "const": 73
+          },
+          "sampled_claim_count": {
+            "const": 14
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "candidate_id": {
+            "const": "candidate-04"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "total_candidate_claim_count": {
+            "const": 21
+          },
+          "sampled_claim_count": {
+            "const": 12
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "candidate_id": {
+            "const": "candidate-05"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "total_candidate_claim_count": {
+            "const": 71
+          },
+          "sampled_claim_count": {
+            "const": 14
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "candidate_id": {
+            "const": "candidate-06"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "total_candidate_claim_count": {
+            "const": 289
+          },
+          "sampled_claim_count": {
+            "const": 24
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}

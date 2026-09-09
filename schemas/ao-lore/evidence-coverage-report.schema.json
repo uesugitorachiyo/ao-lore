@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/evidence-coverage-report.schema.json",
+  "title": "AO Lore Evidence Coverage Report v0.1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "query_digest", "profile_id", "target", "coverage", "requirements", "gates", "coverage_history", "decision", "reason"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.evidence-coverage-report.v0.1"},
+    "query_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}, "profile_id": {"type": "string"},
+    "target": {"type": "number", "minimum": 0, "maximum": 1}, "coverage": {"type": "number", "minimum": 0, "maximum": 1},
+    "requirements": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["id", "weight", "status", "satisfaction_value", "evidence_refs", "coverage_gain"], "properties": {"id": {"type": "string"}, "weight": {"type": "number", "exclusiveMinimum": 0}, "status": {"enum": ["satisfied", "partially_satisfied", "missing", "contradictory", "stale_only", "disqualified"]}, "satisfaction_value": {"type": "number", "minimum": 0, "maximum": 1}, "evidence_refs": {"type": "array", "items": {"type": "string"}}, "coverage_gain": {"type": "number", "minimum": 0, "maximum": 1}}}},
+    "gates": {"type": "object", "additionalProperties": false, "required": ["coverage_target_met", "mandatory_requirements_met", "provenance_present", "citations_present", "freshness_met", "trust_met", "no_hard_contradiction", "deterministic_validation_passed"], "properties": {"coverage_target_met": {"type": "boolean"}, "mandatory_requirements_met": {"type": "boolean"}, "provenance_present": {"type": "boolean"}, "citations_present": {"type": "boolean"}, "freshness_met": {"type": "boolean"}, "trust_met": {"type": "boolean"}, "no_hard_contradiction": {"type": "boolean"}, "deterministic_validation_passed": {"type": "boolean"}}},
+    "coverage_history": {"type": "array", "items": {"type": "object", "required": ["event", "coverage"], "properties": {"event": {"type": "string"}, "node_id": {"type": "string"}, "coverage": {"type": "number", "minimum": 0, "maximum": 1}, "gain": {"type": "number"}}}},
+    "decision": {"enum": ["answer", "partial", "refuse", "replan"]}, "reason": {"type": "string"}
+  }
+}

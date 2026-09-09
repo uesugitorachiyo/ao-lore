@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/candidate-quality-campaign-v0.1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "campaign_id",
+    "correlation_id",
+    "terminal_readback_digest",
+    "total_candidate_count",
+    "total_claim_count",
+    "total_sampled_claim_count",
+    "total_question_count",
+    "candidate_bindings",
+    "sampling_policy_digest",
+    "sample_digest",
+    "annotations_digest",
+    "questions_digest",
+    "question_results_digest",
+    "result_digests",
+    "campaign_digest",
+    "canonical_query_invoked",
+    "review_event_appended",
+    "candidate_decision_taken",
+    "promotion_prepared",
+    "promotion_applied",
+    "provider_calls",
+    "network_accessed",
+    "credential_used",
+    "publication",
+    "release",
+    "deployment",
+    "authority_advanced"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ao.lore.candidate-quality-campaign.v0.1"
+    },
+    "campaign_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "correlation_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "terminal_readback_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "total_candidate_count": {
+      "type": "integer",
+      "const": 6
+    },
+    "total_claim_count": {
+      "type": "integer",
+      "const": 486
+    },
+    "total_sampled_claim_count": {
+      "type": "integer",
+      "const": 96
+    },
+    "total_question_count": {
+      "type": "integer",
+      "const": 24
+    },
+    "candidate_bindings": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "candidate_id",
+          "candidate_digest",
+          "provenance_digest",
+          "source_digest",
+          "claim_count"
+        ],
+        "properties": {
+          "candidate_id": {
+            "$ref": "#/$defs/identifier"
+          },
+          "candidate_digest": {
+            "$ref": "#/$defs/digest"
+          },
+          "provenance_digest": {
+            "$ref": "#/$defs/digest"
+          },
+          "source_digest": {
+            "$ref": "#/$defs/digest"
+          },
+          "claim_count": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 486
+          }
+        }
+      }
+    },
+    "sampling_policy_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "sample_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "annotations_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "questions_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "question_results_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "result_digests": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "$ref": "#/$defs/digest"
+      }
+    },
+    "campaign_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "canonical_query_invoked": {
+      "const": false
+    },
+    "review_event_appended": {
+      "const": false
+    },
+    "candidate_decision_taken": {
+      "const": false
+    },
+    "promotion_prepared": {
+      "const": false
+    },
+    "promotion_applied": {
+      "const": false
+    },
+    "provider_calls": {
+      "const": false
+    },
+    "network_accessed": {
+      "const": false
+    },
+    "credential_used": {
+      "const": false
+    },
+    "publication": {
+      "const": false
+    },
+    "release": {
+      "const": false
+    },
+    "deployment": {
+      "const": false
+    },
+    "authority_advanced": {
+      "const": false
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}
