@@ -1,5 +1,50 @@
 # Operate isolated evidence workspaces
 
+## Optional surrounding document evidence
+
+The Python document-query API supports bounded context expansion for retrieval
+adapters. Existing callers and the workspace CLI retain their baseline behavior.
+For an explicitly selected, validated document generation:
+
+```python
+from ao_lore.document_evidence_query import query_workspace_documents
+
+result = query_workspace_documents(
+    generation, workspace_id, prompt,
+    limit=64, adjacent_blocks=1, context_limit=128, max_context_chars=65536,
+)
+```
+
+`limit` selects ranked matching blocks. Those seeds are admitted first, followed
+by neighboring sibling blocks from the same document and parent. Expansion
+stops at headings; heading hits themselves do not expand. At most two siblings
+per direction are supported. Source block order defines adjacency, including
+across page boundaries within the same section. Added context is a bounded
+neighborhood, not a guarantee that every neighboring sentence is relevant.
+
+Overlapping windows deduplicate by document and block identity. Each block
+retains its original text, source span, digest, sensitivity, and freshness.
+Contradictory text remains verbatim; expansion does not resolve contradictions
+or grant candidate or canonical authority. Restrictions and freshness checks on
+ranked seeds apply even when the output budget prevents their inclusion.
+
+The expanded output has at most `context_limit` blocks (1–128), and its summed
+text length cannot exceed `max_context_chars` (1–1,048,576 Unicode code points).
+Blocks are never cut to fit; an oversized seed cannot add context on its own.
+If a seed or neighbor is omitted for budget, the readback records a qualification
+and returns `partial` instead of `answer`; restriction/freshness outcomes take
+precedence. A `partial` result does not assert semantic incompleteness, only
+that the requested context window was not fully delivered.
+
+The defaults (`adjacent_blocks=0`, `context_limit=128`, `max_context_chars=65536`)
+preserve the original query identity and output. In baseline mode, the original
+block-count limit applies without a new text cap. Nondefault expansion/budget
+settings are bound into the query identity. Character counts are not model
+tokens: adapters must still count the actual formatted context with their
+chosen tokenizer and enforce their delivery budget.
+
+## Workspace boundaries
+
 AO Lore uses **workspace** as the operator-facing name for one isolated
 evidence-graph lifecycle. One AO Lore deployment belongs to one company and
 uses one ignored `AO_LORE_HOME` runtime root. The workspace types are
