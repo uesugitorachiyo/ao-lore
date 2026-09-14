@@ -8,6 +8,9 @@ Graph enrichment is conditional. Add an edge only when direct evidence supports
 the relationship and the edge materially improves retrieval, applicability,
 conflict handling, qualification, or supersession. Graph size is not a quality
 measure, and absence of a graph is not an error for document-only workspaces.
+The generic graph APIs retain exact source, claim, relationship, freshness,
+qualification, contradiction, and refusal bindings. Graph membership is
+informational retrieval state, not canonical knowledge.
 
 Candidate preparation is a separate, explicit governed selection from verified
 document evidence, verified graph evidence, or both. Retrieval and graph

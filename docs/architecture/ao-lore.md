@@ -783,6 +783,12 @@ reduced before one output write and flush. Ordinary argument, product,
 validation, serialization, write, or flush failures collapse to the stable
 path-free rejection; process-control exceptions propagate.
 
+```bash
+AO_LORE_HOME="$PWD/.ao-lore" PYTHONPATH=src python3 scripts/private-docx-uat.py prepare-seed --json
+AO_LORE_HOME="$PWD/.ao-lore" PYTHONPATH=src python3 scripts/private-docx-uat.py run --json
+AO_LORE_HOME="$PWD/.ao-lore" PYTHONPATH=src python3 scripts/private-docx-uat.py cleanup --json
+```
+
 The fixed corpus identity and four opaque item identities cannot be overridden.
 Reviewed inputs carry both original and derived digests and the exact
 `restore-ooxml-local-header-v1` transformation, which changes only the damaged
@@ -869,7 +875,9 @@ Recursive privacy and original-source immutability checks passed. This retained
 condition without granting promotion or release authority. English OCR has its
 own separately retained qualification and campaign evidence. A Docling DOCX
 fallback, promotion, providers, release, publication, and deployment remain
-outside this DOCX campaign.
+outside this DOCX campaign. Each such action requires separate explicit
+authorization; the retained campaign grants no promotion, release,
+publication, or deployment authority.
 
 ## Evaluation and monitoring interfaces
 

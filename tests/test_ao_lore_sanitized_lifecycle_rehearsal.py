@@ -283,7 +283,6 @@ class SanitizedLifecycleRehearsalTests(unittest.TestCase):
             encoding="utf-8"
         ).casefold()
         workflow = " ".join(workflow.split())
-        readme = (ROOT / "README.md").read_text(encoding="utf-8").casefold()
         agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8").casefold()
         for phrase in (
             "synthetic fixture authority", "disposable brain",
@@ -291,7 +290,7 @@ class SanitizedLifecycleRehearsalTests(unittest.TestCase):
             "does not authorize github publication", "private visibility only",
         ):
             self.assertIn(phrase, workflow)
-        self.assertIn("rehearse-sanitized-lifecycle.py --check", readme)
+        self.assertIn("rehearse-sanitized-lifecycle.py --check", workflow)
         self.assertIn(".ao-lore/sanitized-lifecycle-rehearsal", agents)
         self.assertIn("fixed-root", agents)
 

@@ -92,11 +92,10 @@ DOCX_FIXTURE = ROOT / "tests" / "fixtures" / "ao_lore" / "docx" / "minimal-parag
 
 class CandidateQualityDocumentationTests(unittest.TestCase):
     def test_current_docs_preserve_quality_recommendation_non_authority(self):
-        readme = (ROOT / "README.md").read_text(encoding="utf-8")
         roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
         workflow = (ROOT / "docs/workflows/review-public-candidate-quality.md").read_text(encoding="utf-8")
-        self.assertIn("rehearse-public-candidate-quality-review.py --check", readme)
-        self.assertIn("486 claims and citations", readme)
+        self.assertIn("rehearse-public-candidate-quality-review.py --check", workflow)
+        self.assertIn("486 claims and citations", workflow)
         self.assertIn("[x] Produce and semantically annotate the deterministic 96-claim sample", roadmap)
         self.assertIn("[ ] Take any candidate accept/reject action", roadmap)
         self.assertIn("It is not acceptance", workflow)
@@ -105,12 +104,12 @@ class CandidateQualityDocumentationTests(unittest.TestCase):
 
 class EvidenceGraphDocumentationTests(unittest.TestCase):
     def test_connected_bundle_and_non_authority_are_documented(self):
-        readme = (ROOT / "README.md").read_text(encoding="utf-8")
         roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
         workflow = (ROOT / "docs/workflows/workspaces.md").read_text(encoding="utf-8")
         agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
-        self.assertIn("generic graph APIs", readme)
-        self.assertIn("not canonical knowledge", readme)
+        architecture = (ROOT / "docs/architecture/progressive-evidence.md").read_text(encoding="utf-8")
+        self.assertIn("generic graph APIs", architecture)
+        self.assertIn("not canonical knowledge", architecture)
         self.assertIn("[x] Run independently precommitted", roadmap)
         self.assertIn("[ ] Treat any graph claim as candidate or canonical knowledge", roadmap)
         self.assertIn("informational and non-canonical", workflow)
@@ -457,16 +456,16 @@ class AOLoreIntegrationTests(unittest.TestCase):
         self.assertEqual(benchmark_result, result)
 
     def test_private_docx_operator_contract_and_retained_evidence_are_documented(self):
-        readme = (ROOT / "README.md").read_text(encoding="utf-8")
         architecture = (ROOT / "docs/architecture/ao-lore.md").read_text(
             encoding="utf-8"
         )
+        normalized_architecture = " ".join(architecture.split())
         roadmap = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
         for action in ("prepare-seed", "run", "cleanup"):
-            self.assertIn(f"scripts/private-docx-uat.py {action} --json", readme)
-        self.assertIn("restore-ooxml-local-header-v1", readme)
-        self.assertIn("88 accepted documents, 11 expected", readme)
-        self.assertIn("one expected invalid-package rejection", readme)
+            self.assertIn(f"scripts/private-docx-uat.py {action} --json", architecture)
+        self.assertIn("restore-ooxml-local-header-v1", architecture)
+        self.assertIn("88 accepted documents, 11 expected", architecture)
+        self.assertIn("one expected invalid-package rejection", normalized_architecture)
         self.assertIn("private DOCX operator", architecture)
         self.assertIn("DOCX uses a dedicated OOXML baseline with no active fallback", architecture)
         self.assertIn("does not grant qualification or promotion authority", architecture)
@@ -477,12 +476,12 @@ class AOLoreIntegrationTests(unittest.TestCase):
         )
         self.assertIn(
             "sha256:e36b132b49cc08b5815757912c0f77d68b2465095db40559608d878930d594fe",
-            readme,
+            architecture,
         )
         self.assertIn("[x] Implement and benchmark OCR/layout adapters", roadmap)
         self.assertIn("[x] Add separately authorized candidate promotion controls", roadmap)
-        self.assertIn("Each such action requires", readme)
-        self.assertIn("separate explicit authorization", readme)
+        self.assertIn("Each such action requires", architecture)
+        self.assertIn("separate explicit authorization", normalized_architecture)
         self.assertTrue((ROOT / "workflows/promote-candidate.md").is_file())
         self.assertIn(
             "[x] Evaluate PaddleOCR/OCR separately; keep any bounded Docling DOCX fallback separate",
@@ -490,16 +489,14 @@ class AOLoreIntegrationTests(unittest.TestCase):
         )
 
     def test_exact_private_ocr_campaign_is_documented_without_authority(self):
-        readme = (ROOT / "README.md").read_text(encoding="utf-8")
         architecture = (ROOT / "docs/architecture/ao-lore.md").read_text(
             encoding="utf-8"
         )
-        for text in (readme, architecture):
-            normalized = " ".join(text.split())
-            self.assertIn("1 initial, 3 resumed, and 0 rerun", normalized)
-            self.assertIn("sha256:c84108676f20b3703dcdc7ada4265e53198027bde2a53fcf883fd33bbebb28ad", normalized)
-            self.assertIn("sha256:e8395e18fb970438b33640320646b9192b02bd4e6c719fe862b7da5de947344a", normalized)
-            self.assertIn("promotion, release, publication, or deployment authority", normalized)
+        normalized = " ".join(architecture.split())
+        self.assertIn("1 initial, 3 resumed, and 0 rerun", normalized)
+        self.assertIn("sha256:c84108676f20b3703dcdc7ada4265e53198027bde2a53fcf883fd33bbebb28ad", normalized)
+        self.assertIn("sha256:e8395e18fb970438b33640320646b9192b02bd4e6c719fe862b7da5de947344a", normalized)
+        self.assertIn("promotion, release, publication, or deployment authority", normalized)
 
     @private_calibration
     def test_private_pdf_default_launcher_executes_worktree_module_offline(self):
