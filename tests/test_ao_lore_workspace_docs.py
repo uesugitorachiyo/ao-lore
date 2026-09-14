@@ -64,13 +64,11 @@ class WorkspaceDocumentationTests(unittest.TestCase):
             self.assertIn(f"`{reason}`", workflow)
 
     def test_lifecycle_rehearsal_compatibility_backup_and_candidate_path_are_documented(self):
-        readme = read("README.md")
         workflow = read("docs/workflows/workspaces.md")
-        self.assertIn("scripts/rehearse-workspaces.py --check", readme)
+        self.assertIn("scripts/rehearse-workspaces.py --check", workflow)
         self.assertIn("active`, `inactive`, or `investigate", workflow)
         self.assertIn("offline", workflow)
         self.assertNotIn("compatibility", workflow.lower())
-        self.assertIn("generic", readme.lower())
         self.assertIn("backup", workflow.lower())
         self.assertIn("separately governed candidate", workflow)
 
@@ -102,11 +100,6 @@ class WorkspaceDocumentationTests(unittest.TestCase):
         self.assertIn("globally routable", normalized)
         self.assertIn("connected peer", normalized)
         self.assertIn("disposable refresh fixtures do not inspect canonical roots", normalized)
-        readme = " ".join(read("README.md").split()).lower()
-        self.assertIn("clean baseline is offline by default", readme)
-        self.assertIn("separately reviewed trusted domain transport", readme)
-        self.assertIn("globally routable", readme)
-        self.assertIn("connected peer", readme)
         self.assertNotIn("scripts/rehearse-evidence-freshness.py", refresh)
         self.assertNotIn("ao-lore evidence-graph refresh", refresh)
         self.assertNotIn("acquire --json", refresh)

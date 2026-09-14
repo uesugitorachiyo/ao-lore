@@ -4,7 +4,8 @@ This offline deterministic workflow evaluates non-canonical candidates without
 deciding their review status or querying canonical knowledge.
 
 It verifies every claim, citation, mapping, provenance binding, and public
-source digest for six candidates. It selects exactly 96 claims using a closed
+source digest for six candidates: 486 claims and citations in the completed
+campaign. It selects exactly 96 claims using a closed
 sampling policy, requires one semantic label per selection, and runs four
 precommitted candidate-payload questions per source. Unsupported questions must
 refuse with no evidence.
