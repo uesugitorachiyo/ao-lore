@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/source-viewer-resolve-v0.2.schema.json",
+  "$comment": "Native source-viewer readback. Existing workspace query schemas remain unchanged.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "provenance_mode", "primary_workspace_id", "open_id", "expires_in_seconds", "evidence", "original_sensitivity", "original_bytes_verified", "native_binding_revalidated", "original_download_allowed", "display"],
+  "properties": {
+    "schema_version": {"const": "ao.lore.source-viewer-resolve.v0.2"},
+    "provenance_mode": {"const": "native-retained-source"},
+    "primary_workspace_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"},
+    "open_id": {"type": "string", "pattern": "^[A-Za-z0-9_-]{43}$"},
+    "expires_in_seconds": {"type": "integer", "minimum": 0, "maximum": 120},
+    "evidence": {"$ref": "workspace-document-query-readback-v0.1.schema.json#/$defs/evidence"},
+    "original_sensitivity": {"enum": ["public", "internal"]},
+    "original_bytes_verified": {"const": true},
+    "native_binding_revalidated": {"const": true},
+    "original_download_allowed": {"type": "boolean"},
+    "display": {"$ref": "source-viewer-resolve-v0.1.schema.json#/properties/display"}
+  }
+}

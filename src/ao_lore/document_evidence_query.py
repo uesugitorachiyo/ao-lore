@@ -55,6 +55,56 @@ def _context_windows(values: list[dict[str, Any]], radius: int):
     return windows
 
 
+def _evidence_record(workspace_id, generation, document, block):
+    block_digest = canonical_digest(block)
+    evidence_id = canonical_digest({
+        "workspace_id": workspace_id,
+        "generation_digest": generation["generation_digest"],
+        "document_id": document["document_id"],
+        "document_ir_digest": document["document_ir_digest"],
+        "block_id": block["id"],
+        "block_digest": block_digest,
+        "source_span": block["source_span"],
+        "text_digest": canonical_digest(block["text"]),
+    })
+    return {
+        "evidence_id": evidence_id, "workspace_id": workspace_id,
+        "generation_digest": generation["generation_digest"],
+        "document_id": document["document_id"],
+        "document_ir_digest": document["document_ir_digest"],
+        "source_id": document["source_id"], "source_digest": document["source_digest"],
+        "block_id": block["id"], "block_digest": block_digest,
+        "render_text": block["text"], "source_span": copy.deepcopy(block["source_span"]),
+        "authority_role": document["authority_role"], "sensitivity": document["sensitivity"],
+        "freshness_status": document["freshness_status"],
+        "qualification_codes": copy.deepcopy(document["qualification_codes"]),
+    }
+
+
+def resolve_workspace_document_evidence(
+    generation: dict[str, object], workspace_id: str, evidence_id: str | None = None,
+    *, block_id: str | None = None,
+) -> dict[str, object]:
+    """Revalidate one immutable block identity without performing a query."""
+    if type(workspace_id) is not str or (evidence_id is None) == (block_id is None):
+        raise DocumentEvidenceQueryError("document evidence identity is invalid")
+    try:
+        current = validate_workspace_document_generation(generation)
+    except (ContractError, TypeError, ValueError) as exc:
+        raise DocumentEvidenceQueryError("document generation is invalid") from exc
+    if current["workspace_id"] != workspace_id:
+        raise DocumentEvidenceQueryError("document workspace binding differs")
+    matches = []
+    for document in current["documents"]:
+        for block in _blocks(document["document_ir"]["blocks"]):
+            record = _evidence_record(workspace_id, current, document, block)
+            if record["evidence_id"] == evidence_id or (evidence_id is None and block["id"] == block_id):
+                matches.append(record)
+    if len(matches) != 1:
+        raise DocumentEvidenceQueryError("document evidence identity is unavailable")
+    return copy.deepcopy(matches[0])
+
+
 def query_workspace_documents(
     generation: dict[str, object],
     workspace_id: str,
@@ -155,35 +205,7 @@ def query_workspace_documents(
 
     evidence = []
     for document, block in selected:
-        block_digest = canonical_digest(block)
-        text_digest = canonical_digest(block["text"])
-        evidence_id = canonical_digest({
-            "workspace_id": workspace_id,
-            "generation_digest": current["generation_digest"],
-            "document_id": document["document_id"],
-            "document_ir_digest": document["document_ir_digest"],
-            "block_id": block["id"],
-            "block_digest": block_digest,
-            "source_span": block["source_span"],
-            "text_digest": text_digest,
-        })
-        evidence.append({
-            "evidence_id": evidence_id,
-            "workspace_id": workspace_id,
-            "generation_digest": current["generation_digest"],
-            "document_id": document["document_id"],
-            "document_ir_digest": document["document_ir_digest"],
-            "source_id": document["source_id"],
-            "source_digest": document["source_digest"],
-            "block_id": block["id"],
-            "block_digest": block_digest,
-            "render_text": block["text"],
-            "source_span": copy.deepcopy(block["source_span"]),
-            "authority_role": document["authority_role"],
-            "sensitivity": document["sensitivity"],
-            "freshness_status": document["freshness_status"],
-            "qualification_codes": copy.deepcopy(document["qualification_codes"]),
-        })
+        evidence.append(_evidence_record(workspace_id, current, document, block))
 
     qualifications = sorted({code for item in evidence for code in item["qualification_codes"]})
     # Packing must not hide a restriction or freshness gate on a ranked seed.

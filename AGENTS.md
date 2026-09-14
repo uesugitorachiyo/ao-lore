@@ -67,7 +67,9 @@ Do not contact or synchronize with the Mac host.
   workspace, graph, source, claim or edge, and evidence digest. A bare local ID
   is never sufficient and shared references never override existing authority,
   freshness, qualification, or contradiction gates.
-- Selected `workspace refresh` is the only operation that may use the network.
+- Selected `workspace refresh` is the only operation that may use an outbound
+  network transport. The separately started source viewer may use numeric
+  loopback HTTP only; it cannot make outbound connections.
   The clean core has no default HTTP transport, so refresh is unavailable
   unless a trusted private deployment transport is installed. Any such
   transport must start at the policy-bound locator and follow only validated
@@ -82,6 +84,10 @@ Do not contact or synchronize with the Mac host.
 - Retrieval is deterministic, local, read-only, provider-free, network-free,
   and non-persistent. Preserve distinct contradictions; never collapse them
   into consensus or bypass the hard contradiction gate.
+- The explicitly started source viewer requires a separate expiring
+  whole-original approval. It must revalidate the selected registry, direct
+  references, document generation, evidence, source sensitivity, and retained
+  bytes on every protected read; it never accepts a client path or locator.
 - Parser, distiller, navigator, and synthesizer roles have independent
   configuration, privacy, provider, cache, fallback, and budget boundaries.
 

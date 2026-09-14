@@ -107,6 +107,8 @@ operator authority.
   verified documents work without a graph and when navigation adds value.
 - [Evidence workspaces](docs/workflows/workspaces.md): company-local isolation
   and direct, read-only reference imports.
+- [Local source viewer](docs/workflows/source-viewer.md): separately approved
+  original-file display with native evidence revalidation.
 - [Graph freshness](docs/workflows/refresh-evidence-graph.md): bounded graph
   inspection, refresh classifications, and recovery boundaries.
 - [Candidate-quality review](docs/workflows/review-public-candidate-quality.md):

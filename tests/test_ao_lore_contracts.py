@@ -219,6 +219,11 @@ class AOLoreContractTests(unittest.TestCase):
         "public-release-manifest-v0.1.schema.json",
         "public-release-readiness-v0.1.schema.json",
         "sanitized-lifecycle-rehearsal-v0.1.schema.json",
+        "source-viewer-bindings-v0.1.schema.json",
+        "source-viewer-grant-v0.1.schema.json",
+        "source-viewer-native-bindings-v0.1.schema.json",
+        "source-viewer-resolve-v0.1.schema.json",
+        "source-viewer-resolve-v0.2.schema.json",
     }
 
     def load(self, name: str) -> dict:
@@ -242,8 +247,8 @@ class AOLoreContractTests(unittest.TestCase):
                 schema["$id"],
             )
         references = cross_file_references()
-        self.assertEqual(11, len(references))
-        self.assertEqual(11, len(set(references)))
+        self.assertEqual(14, len(references))
+        self.assertEqual(14, len(set(references)))
 
     def test_capability_profile_is_extensible_but_core_identity_is_strict(self):
         schema = self.load("parser-capability-profile.schema.json")
