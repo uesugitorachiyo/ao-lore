@@ -1,0 +1,215 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/source-viewer-bindings-v0.1.schema.json",
+  "$comment": "Pilot snapshot contract. Semantic cross-field/digest/expiry checks are enforced in contracts.py and store.py. Existing AO Lore query schemas are not modified.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "primary_workspace_id",
+    "reference_workspace_ids",
+    "provenance_mode",
+    "records"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ao.lore.source-viewer-bindings.v0.1"
+    },
+    "primary_workspace_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+    },
+    "reference_workspace_ids": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 32,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+      },
+      "uniqueItems": true
+    },
+    "provenance_mode": {
+      "const": "operator-approved-snapshot"
+    },
+    "records": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "evidence",
+          "format",
+          "original_sensitivity",
+          "pdf_page_basis"
+        ],
+        "properties": {
+          "evidence": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "evidence_id",
+              "workspace_id",
+              "generation_digest",
+              "document_id",
+              "document_ir_digest",
+              "source_id",
+              "source_digest",
+              "block_id",
+              "block_digest",
+              "render_text",
+              "source_span",
+              "authority_role",
+              "sensitivity",
+              "freshness_status",
+              "qualification_codes"
+            ],
+            "properties": {
+              "evidence_id": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              },
+              "workspace_id": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+              },
+              "generation_digest": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              },
+              "document_id": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^sha256:[0-9a-f]{64}$"
+                  }
+                ]
+              },
+              "document_ir_digest": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              },
+              "source_id": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+              },
+              "source_digest": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              },
+              "block_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "block_digest": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              },
+              "render_text": {
+                "type": "string",
+                "maxLength": 1048576
+              },
+              "source_span": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "start",
+                  "end"
+                ],
+                "properties": {
+                  "start": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "end": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "page": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  },
+                  "coordinates": {
+                    "type": "array",
+                    "minItems": 4,
+                    "maxItems": 4,
+                    "items": {
+                      "type": "number",
+                      "minimum": -1000000000000.0,
+                      "maximum": 1000000000000.0
+                    }
+                  }
+                }
+              },
+              "authority_role": {
+                "enum": [
+                  "primary_law",
+                  "official_interpretation",
+                  "local_enforcement_guidance",
+                  "technical_guidance",
+                  "operator_procedure",
+                  "case_evidence"
+                ]
+              },
+              "sensitivity": {
+                "enum": [
+                  "public",
+                  "internal",
+                  "restricted"
+                ]
+              },
+              "freshness_status": {
+                "enum": [
+                  "current",
+                  "stale",
+                  "superseded",
+                  "unavailable",
+                  "unknown"
+                ]
+              },
+              "qualification_codes": {
+                "type": "array",
+                "minItems": 0,
+                "maxItems": 32,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+                },
+                "uniqueItems": true
+              }
+            }
+          },
+          "format": {
+            "enum": [
+              "pdf",
+              "text",
+              "docx"
+            ]
+          },
+          "original_sensitivity": {
+            "enum": [
+              "public",
+              "internal"
+            ]
+          },
+          "pdf_page_basis": {
+            "enum": [
+              "physical-one-based",
+              "not-applicable"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

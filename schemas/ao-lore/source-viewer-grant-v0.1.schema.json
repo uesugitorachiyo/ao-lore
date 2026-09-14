@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/source-viewer-grant-v0.1.schema.json",
+  "$comment": "Pilot snapshot contract. Semantic cross-field/digest/expiry checks are enforced in contracts.py and store.py. Existing AO Lore query schemas are not modified.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "grant_id",
+    "primary_workspace_id",
+    "binding_digest",
+    "created_at",
+    "expires_at",
+    "max_sensitivity",
+    "authorized_scope",
+    "allow_original_download"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ao.lore.source-viewer-grant.v0.1"
+    },
+    "grant_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+    },
+    "primary_workspace_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+    },
+    "binding_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "created_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "expires_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "max_sensitivity": {
+      "enum": [
+        "public",
+        "internal"
+      ]
+    },
+    "authorized_scope": {
+      "const": "whole-source"
+    },
+    "allow_original_download": {
+      "type": "boolean"
+    }
+  }
+}

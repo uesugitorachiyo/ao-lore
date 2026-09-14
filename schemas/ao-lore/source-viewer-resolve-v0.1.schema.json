@@ -1,0 +1,305 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ao-lore.example/source-viewer-resolve-v0.1.schema.json",
+  "$comment": "Pilot snapshot contract. Semantic cross-field/digest/expiry checks are enforced in contracts.py and store.py. Existing AO Lore query schemas are not modified.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "provenance_mode",
+    "primary_workspace_id",
+    "open_id",
+    "expires_in_seconds",
+    "evidence",
+    "original_sensitivity",
+    "original_bytes_verified",
+    "native_binding_revalidated",
+    "original_download_allowed",
+    "display"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ao.lore.source-viewer-resolve.v0.1"
+    },
+    "provenance_mode": {
+      "const": "operator-approved-snapshot"
+    },
+    "primary_workspace_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+    },
+    "open_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{43}$"
+    },
+    "expires_in_seconds": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 120
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_id",
+        "workspace_id",
+        "generation_digest",
+        "document_id",
+        "document_ir_digest",
+        "source_id",
+        "source_digest",
+        "block_id",
+        "block_digest",
+        "render_text",
+        "source_span",
+        "authority_role",
+        "sensitivity",
+        "freshness_status",
+        "qualification_codes"
+      ],
+      "properties": {
+        "evidence_id": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "workspace_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+        },
+        "generation_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "document_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+            },
+            {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            }
+          ]
+        },
+        "document_ir_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+        },
+        "source_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "block_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "block_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "render_text": {
+          "type": "string",
+          "maxLength": 1048576
+        },
+        "source_span": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "start",
+            "end"
+          ],
+          "properties": {
+            "start": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "end": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "page": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2147483647
+            },
+            "coordinates": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "items": {
+                "type": "number",
+                "minimum": -1000000000000.0,
+                "maximum": 1000000000000.0
+              }
+            }
+          }
+        },
+        "authority_role": {
+          "enum": [
+            "primary_law",
+            "official_interpretation",
+            "local_enforcement_guidance",
+            "technical_guidance",
+            "operator_procedure",
+            "case_evidence"
+          ]
+        },
+        "sensitivity": {
+          "enum": [
+            "public",
+            "internal",
+            "restricted"
+          ]
+        },
+        "freshness_status": {
+          "enum": [
+            "current",
+            "stale",
+            "superseded",
+            "unavailable",
+            "unknown"
+          ]
+        },
+        "qualification_codes": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 32,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "original_sensitivity": {
+      "enum": [
+        "public",
+        "internal"
+      ]
+    },
+    "original_bytes_verified": {
+      "const": true
+    },
+    "native_binding_revalidated": {
+      "const": false
+    },
+    "original_download_allowed": {
+      "type": "boolean"
+    },
+    "display": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "cited_page",
+        "highlight"
+      ],
+      "properties": {
+        "format": {
+          "enum": [
+            "pdf",
+            "text",
+            "docx"
+          ]
+        },
+        "cited_page": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "maximum": 2000
+        },
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2000
+        },
+        "page_count": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1,
+          "maximum": 2000
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20000
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20000
+        },
+        "highlight": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "boxes"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "exact_unique_text",
+                "exact_verified_span",
+                "empty_excerpt",
+                "exact_match_unavailable",
+                "ambiguous_exact_match",
+                "no_cited_excerpt_on_this_page",
+                "highlight_excerpt_limit",
+                "highlight_text_limit",
+                "highlight_search_limit",
+                "highlight_geometry_limit",
+                "highlight_outside_page",
+                "highlight_geometry_unavailable",
+                "not_verified"
+              ]
+            },
+            "basis": {
+              "const": "renderer-exact-text"
+            },
+            "boxes": {
+              "type": "array",
+              "minItems": 0,
+              "maxItems": 256,
+              "items": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              }
+            }
+          }
+        },
+        "render_status": {
+          "enum": [
+            "available",
+            "pdf_renderer_unavailable"
+          ]
+        },
+        "display_label": {
+          "enum": [
+            "Original UTF-8 text; literal display",
+            "DOCX main-body text projection; not Word pagination or layout"
+          ]
+        }
+      }
+    }
+  }
+}
