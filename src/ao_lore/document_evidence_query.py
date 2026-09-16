@@ -10,6 +10,7 @@ from typing import Any
 from ._strict_io import ContractError
 from .benchmark import canonical_digest
 from .document_evidence_contracts import validate_workspace_document_generation
+from .document_evidence_retrieval import RETRIEVAL_VERSION, select_document_blocks
 from .workspace_contracts import AUTHORITY_FIELDS
 
 
@@ -145,31 +146,10 @@ def query_workspace_documents(
     if current["workspace_id"] != workspace_id:
         raise DocumentEvidenceQueryError("document workspace binding differs")
 
-    normalized_prompt = _normalize(prompt)
-    if not normalized_prompt:
+    if not _normalize(prompt):
         raise DocumentEvidenceQueryError("document query is invalid")
-    prompt_tokens = normalized_prompt.split()
-    prompt_set = set(prompt_tokens)
-    scored: list[tuple[tuple[int, int, int, str, str], dict[str, Any], dict[str, Any]]] = []
-    for document in current["documents"]:
-        for block in _blocks(document["document_ir"]["blocks"]):
-            normalized_text = _normalize(block["text"])
-            block_tokens = normalized_text.split()
-            matched_prompt = len(prompt_set.intersection(block_tokens))
-            if not matched_prompt:
-                continue
-            matched_block = sum(token in prompt_set for token in block_tokens)
-            rank = (
-                -int(normalized_prompt in normalized_text),
-                -matched_prompt,
-                -matched_block,
-                document["document_id"],
-                block["id"],
-            )
-            scored.append((rank, document, block))
-    scored.sort(key=lambda item: item[0])
-
-    selected = [(document, block) for _rank, document, block in scored[:limit]]
+    selection = select_document_blocks(current, prompt, limit)
+    selected = list(selection.pairs)
     context_limited = False
     expanded_mode = adjacent_blocks or max_context_chars != 65536 or context_limit != 128
     if expanded_mode:
@@ -182,7 +162,7 @@ def query_workspace_documents(
         used_chars = 0
         # Preserve ranked hits first; use remaining capacity for local context.
         # Each added block retains its own provenance and verbatim text.
-        seeds = [(document, block) for _rank, document, block in scored[:limit]]
+        seeds = list(selection.pairs)
         def admit(document, candidate):
             nonlocal used_chars, context_limited
             identity = (document["document_id"], candidate["id"])
@@ -209,11 +189,10 @@ def query_workspace_documents(
 
     qualifications = sorted({code for item in evidence for code in item["qualification_codes"]})
     # Packing must not hide a restriction or freshness gate on a ranked seed.
-    gate_documents = [document for _rank, document, _block in scored[:limit]]
-    if any(item["sensitivity"] == "restricted" for item in gate_documents):
+    if selection.restricted:
         outcome, reason_code, evidence = "refuse", "restricted_evidence", []
         qualifications = ["Restricted evidence cannot be rendered."]
-    elif any(item["freshness_status"] != "current" for item in gate_documents):
+    elif selection.freshness_review:
         outcome, reason_code = "investigate", "freshness_investigation_required"
         qualifications = ["Document freshness requires review.", *qualifications]
     elif evidence:
@@ -221,12 +200,21 @@ def query_workspace_documents(
     else:
         outcome, reason_code = "refuse", "no_evidence"
 
-    if context_limited and reason_code != "restricted_evidence":
+    if (context_limited or selection.incomplete) and reason_code != "restricted_evidence":
         if outcome == "answer":
             outcome = "partial"
-        qualifications = ["Context expansion was limited; evidence may be incomplete.", *qualifications]
+        if selection.incomplete:
+            qualifications = [*selection.qualifications, *qualifications]
+        if context_limited:
+            qualifications = ["Context expansion was limited; evidence may be incomplete.", *qualifications]
 
-    query_binding = {"prompt": prompt, "workspace_id": workspace_id, "generation_digest": current["generation_digest"], "limit": limit}
+    query_binding = {
+        "prompt": prompt,
+        "workspace_id": workspace_id,
+        "generation_digest": current["generation_digest"],
+        "limit": limit,
+        "retrieval_version": RETRIEVAL_VERSION,
+    }
     if expanded_mode:
         query_binding.update({"adjacent_blocks": adjacent_blocks, "max_context_chars": max_context_chars, "context_limit": context_limit})
 
