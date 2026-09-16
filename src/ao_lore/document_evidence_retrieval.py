@@ -103,16 +103,27 @@ def _provider_cohort(documents, prompt, focused, limit):
     # resolved members; never widen to a document that merely mentions a provider.
     members = {subject for _, _, subject, provider in assignments if provider in providers}
     fact_request = bool(terms := _tokens(prompt))
+    fact_queues = []
     for document, blocks, subject in documents:
         if not fact_request or subject not in members:
             continue
+        queue = []
         for block in blocks:
             text = block["text"]
             if not (re.search(r"\d", text) or re.search(r"\b(?:owner|accountable|responsible|effective|amend)\w*\b", text, re.I)):
                 continue
+            queue.append(block)
+        if queue:
+            fact_queues.append((document, queue))
+    while any(queue for _, queue in fact_queues) and len(selected) < limit:
+        for document, queue in fact_queues:
+            if not queue or len(selected) >= limit:
+                continue
+            block = queue.pop(0)
+            text = block["text"]
             key = (document["document_id"], block["id"])
             size = len(text.encode("utf-8"))
-            if key in seen or len(selected) >= limit:
+            if key in seen:
                 continue
             if chars + len(text) > MAX_EVIDENCE_CHARACTERS or bytes_used + size > MAX_EVIDENCE_UTF8_BYTES:
                 continue

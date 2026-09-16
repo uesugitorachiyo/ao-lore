@@ -77,6 +77,28 @@ class EvidenceSetPortTests(unittest.TestCase):
         self.assertIn("The verified quantity is 7 units.", rendered)
         self.assertIn("The amended price is 19 credits.", rendered)
 
+    def test_provider_cohort_balances_fact_blocks_across_members(self):
+        birch = "# Birch Depot — registry\nBirch Depot purchases service from Sable Works.\nThe verified quantity is 4 units."
+        cedar = "# Cedar Spur — registry\nCedar Spur purchases service from Sable Works.\nThe verified quantity is 7 units."
+        current = generation(birch)
+        first_b = "# Birch Depot — registry\nBirch Depot purchases service from Sable Works."
+        second_b = "The verified quantity is 4 units."
+        third_b = "The amended price is 11 credits."
+        current["documents"][0]["document_ir"]["blocks"] = [{"id":"b1","type":"paragraph","text":first_b,"source_span":{"start":0,"end":len(first_b)}},{"id":"b2","type":"paragraph","text":second_b,"source_span":{"start":len(first_b)+1,"end":len(first_b)+1+len(second_b)}},{"id":"b3","type":"paragraph","text":third_b,"source_span":{"start":len(first_b)+1+len(second_b)+1,"end":len(first_b)+1+len(second_b)+1+len(third_b)}}]
+        current["documents"][0]["document_ir_digest"] = canonical_digest(current["documents"][0]["document_ir"])
+        value = generation(cedar)["documents"][0]
+        value["document_id"] = "cedar"; value["source_id"] = "native-cedar"; value["document_ir"]["document_id"] = "cedar"
+        first = "# Cedar Spur — registry\nCedar Spur purchases service from Sable Works."
+        second = "The verified quantity is 7 units."
+        value["document_ir"]["blocks"] = [{"id":"c1","type":"paragraph","text":first,"source_span":{"start":0,"end":len(first)}},{"id":"c2","type":"paragraph","text":second,"source_span":{"start":len(first)+1,"end":len(first)+1+len(second)}}]
+        value["document_ir_digest"] = canonical_digest(value["document_ir"])
+        current["documents"].append(value); current["documents"].sort(key=lambda item:item["document_id"])
+        current["generation_digest"] = canonical_digest({key:item for key,item in current.items() if key!="generation_digest"})
+        result = query_workspace_documents(current,"sandbox","What is the total quantity for all sites with the same provider as Birch Depot?",limit=4)
+        rendered="\n".join(item["render_text"] for item in result["evidence"])
+        self.assertIn("The verified quantity is 4 units.",rendered)
+        self.assertIn("The verified quantity is 7 units.",rendered)
+
     def test_export_preserves_exact_unicode_character_offsets(self):
         text = "木の数量。\nThe verified quantity is 17 units."
         current = generation(text)
