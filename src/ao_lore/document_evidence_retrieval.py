@@ -98,6 +98,25 @@ def _provider_cohort(documents, prompt, focused, limit):
         if chars + len(block["text"]) > MAX_EVIDENCE_CHARACTERS or bytes_used + size > MAX_EVIDENCE_UTF8_BYTES:
             continue
         selected.append((document, block)); seen.add(key); chars += len(block["text"]); bytes_used += size
+    # Cohort membership alone cannot support an owner, quantity, price, or
+    # effective-term question. Add only fact-bearing blocks from the already
+    # resolved members; never widen to a document that merely mentions a provider.
+    members = {subject for _, _, subject, provider in assignments if provider in providers}
+    fact_request = bool(terms := _tokens(prompt))
+    for document, blocks, subject in documents:
+        if not fact_request or subject not in members:
+            continue
+        for block in blocks:
+            text = block["text"]
+            if not (re.search(r"\d", text) or re.search(r"\b(?:owner|accountable|responsible|effective|amend)\w*\b", text, re.I)):
+                continue
+            key = (document["document_id"], block["id"])
+            size = len(text.encode("utf-8"))
+            if key in seen or len(selected) >= limit:
+                continue
+            if chars + len(text) > MAX_EVIDENCE_CHARACTERS or bytes_used + size > MAX_EVIDENCE_UTF8_BYTES:
+                continue
+            selected.append((document, block)); seen.add(key); chars += len(text); bytes_used += size
     freshness = any(document["freshness_status"] != "current" for document, _ in selected)
     return Selection(tuple(selected), ("Provider-cohort navigation uses explicit source assignments; membership is not semantically certified.",), False, False, freshness)
 

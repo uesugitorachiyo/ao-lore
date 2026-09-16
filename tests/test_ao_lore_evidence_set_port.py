@@ -50,6 +50,33 @@ class EvidenceSetPortTests(unittest.TestCase):
         self.assertIn("Cedar Spur purchases service from Sable Works.", rendered)
         self.assertNotIn("Ash Rise purchases service from Other Works.", rendered)
 
+    def test_provider_cohort_keeps_member_facts_after_membership_witnesses(self):
+        birch = "# Birch Depot — registry\nBirch Depot purchases service from Sable Works.\nThe accountable owner is Mira Lake."
+        cedar = "# Cedar Spur — registry\nCedar Spur purchases service from Sable Works.\nThe verified quantity is 7 units.\nThe amended price is 19 credits."
+        current = generation(birch)
+        value = generation(cedar)["documents"][0]
+        value["document_id"] = "cedar"
+        value["source_id"] = "native-cedar"
+        value["document_ir"]["document_id"] = "cedar"
+        first = "# Cedar Spur — registry\nCedar Spur purchases service from Sable Works."
+        second = "The verified quantity is 7 units."
+        third = "The amended price is 19 credits."
+        value["document_ir"]["blocks"] = [
+            {"id": "c1", "type": "paragraph", "text": first, "source_span": {"start": 0, "end": len(first)}},
+            {"id": "c2", "type": "paragraph", "text": second, "source_span": {"start": len(first) + 1, "end": len(first) + 1 + len(second)}},
+            {"id": "c3", "type": "paragraph", "text": third, "source_span": {"start": len(first) + 1 + len(second) + 1, "end": len(first) + 1 + len(second) + 1 + len(third)}},
+        ]
+        value["document_ir_digest"] = canonical_digest(value["document_ir"])
+        current["documents"].append(value)
+        current["documents"].sort(key=lambda item: item["document_id"])
+        current["generation_digest"] = canonical_digest({key: item for key, item in current.items() if key != "generation_digest"})
+        result = query_workspace_documents(
+            current, "sandbox", "What is the total quantity and price for other sites with the same provider as Birch Depot?"
+        )
+        rendered = "\n".join(item["render_text"] for item in result["evidence"])
+        self.assertIn("The verified quantity is 7 units.", rendered)
+        self.assertIn("The amended price is 19 credits.", rendered)
+
     def test_export_preserves_exact_unicode_character_offsets(self):
         text = "木の数量。\nThe verified quantity is 17 units."
         current = generation(text)
