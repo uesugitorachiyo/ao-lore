@@ -29,6 +29,27 @@ def generation(text: str, *, sensitivity: str = "public"):
 
 
 class EvidenceSetPortTests(unittest.TestCase):
+    def test_provider_cohort_expands_to_other_explicit_service_members(self):
+        birch = "# Birch Depot — registry\nBirch Depot purchases service from Sable Works.\nThe verified quantity is 4 units."
+        cedar = "# Cedar Spur — registry\nCedar Spur purchases service from Sable Works.\nThe verified quantity is 7 units."
+        other = "# Ash Rise — registry\nAsh Rise purchases service from Other Works.\nThe verified quantity is 9 units."
+        current = generation(birch)
+        for document_id, text in (("cedar", cedar), ("ash", other)):
+            value = generation(text)["documents"][0]
+            value["document_id"] = document_id
+            value["source_id"] = "native-" + document_id
+            value["document_ir"]["document_id"] = document_id
+            value["document_ir_digest"] = canonical_digest(value["document_ir"])
+            current["documents"].append(value)
+        current["documents"].sort(key=lambda item: item["document_id"])
+        current["generation_digest"] = canonical_digest({key: item for key, item in current.items() if key != "generation_digest"})
+        result = query_workspace_documents(
+            current, "sandbox", "Which other locations use the same service provider as Birch Depot?"
+        )
+        rendered = "\n".join(item["render_text"] for item in result["evidence"])
+        self.assertIn("Cedar Spur purchases service from Sable Works.", rendered)
+        self.assertNotIn("Ash Rise purchases service from Other Works.", rendered)
+
     def test_export_preserves_exact_unicode_character_offsets(self):
         text = "木の数量。\nThe verified quantity is 17 units."
         current = generation(text)

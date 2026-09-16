@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from typing import Any
 
 
-RETRIEVAL_VERSION = "evidence-sets-v2"
+RETRIEVAL_VERSION = "evidence-sets-v3-cohort"
 MAX_EVIDENCE_CHARACTERS = 20_000
 MAX_EVIDENCE_UTF8_BYTES = 20_000
 MAX_CANDIDATE_DOCUMENTS = 64
@@ -18,6 +18,9 @@ _NAME = re.compile(r"(?:[A-Z][\w-]*)(?:\s+(?:[A-Z][\w-]*)){1,5}")
 _STOP = frozenset("a an the and or of to in on at by for from with as is are was were be been this that these those what which where when why how please tell give show find list name include including across applicable applies apply specified before after since until exactly required requirement return full values value number numeric strings word only answer".split())
 _DIRECTIVES = frozenset("return full values value number numeric strings word evaluation date only answer".split())
 _NUMERIC = frozenset("price fee cost charge invoice quantity total sum response target limit elapsed hour hours effective amendment replace".split())
+_COHORT = re.compile(r"\b(?:same|other|all|every|across|portfolio|cohort)\b", re.I)
+_PROVIDER = re.compile(r"\b(?:provider|vendor|supplier|contractor)\b", re.I)
+_ASSIGNMENT = re.compile(r"\b(?P<subject>[\w -]{1,80}?)\s+purchases\s+service\s+from\s+(?P<provider>[\w ._-]{1,80})\.?$", re.I)
 
 
 @dataclass(frozen=True)
@@ -65,6 +68,40 @@ def _query_subjects(prompt: str, subjects: set[str]) -> set[str]:
     return {subject for _, _, subject in kept}
 
 
+def _provider_cohort(documents, prompt, focused, limit):
+    """Return exact blocks for explicit same-provider requests, or None."""
+    if not (_COHORT.search(prompt) and _PROVIDER.search(prompt) and focused):
+        return None
+    assignments = []
+    for document, blocks, subject in documents:
+        if not subject:
+            continue
+        for block in blocks:
+            for sentence in re.split(r"[\n]+|(?<=[.!?])\s+", block["text"].strip()):
+                match = _ASSIGNMENT.search(sentence.strip())
+                if match and _normal(match.group("subject")) == subject:
+                    assignments.append((document, block, subject, _normal(match.group("provider"))))
+                    break
+    providers = {provider for _, _, subject, provider in assignments if subject in focused}
+    if not providers:
+        return Selection((), ("The requested provider assignment was not resolved in eligible source text; do not infer cohort membership.",), True, False, False)
+    chosen = [(document, block) for document, block, subject, provider in assignments
+              if provider in providers and (subject not in focused or not re.search(r"\bother\b", prompt, re.I))]
+    chosen.sort(key=lambda item: (item[0]["document_id"], item[1]["id"]))
+    selected, seen = [], set()
+    chars = bytes_used = 0
+    for document, block in chosen:
+        key = (document["document_id"], block["id"])
+        size = len(block["text"].encode("utf-8"))
+        if key in seen or len(selected) >= limit:
+            continue
+        if chars + len(block["text"]) > MAX_EVIDENCE_CHARACTERS or bytes_used + size > MAX_EVIDENCE_UTF8_BYTES:
+            continue
+        selected.append((document, block)); seen.add(key); chars += len(block["text"]); bytes_used += size
+    freshness = any(document["freshness_status"] != "current" for document, _ in selected)
+    return Selection(tuple(selected), ("Provider-cohort navigation uses explicit source assignments; membership is not semantically certified.",), False, False, freshness)
+
+
 def select_document_blocks(current: dict[str, Any], prompt: str, limit: int) -> Selection:
     """Return only original blocks; selection never opens files or uses providers."""
     terms = _tokens(prompt)
@@ -92,6 +129,9 @@ def select_document_blocks(current: dict[str, Any], prompt: str, limit: int) -> 
         documents.append((document, blocks, subject))
     if restricted:
         return Selection((), (), True, True, False)
+    cohort = _provider_cohort(documents, prompt, focused, limit)
+    if cohort is not None:
+        return cohort
     candidates = [(document, blocks, subject) for document, blocks, subject in documents
                   if not focused or subject in focused]
     if not candidates:
