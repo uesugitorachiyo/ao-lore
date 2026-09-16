@@ -102,13 +102,19 @@ def _provider_cohort(documents, prompt, focused, limit):
     # effective-term question. Add only fact-bearing blocks from the already
     # resolved members; never widen to a document that merely mentions a provider.
     members = {subject for _, _, subject, provider in assignments if provider in providers}
+    member_prefixes = {document["source_id"].split("-", 1)[0] for document, _, subject, provider in assignments if subject in members and provider in providers}
+    owner_query = bool(re.search(r"\b(?:owner|accountable|responsible)\b", prompt, re.I))
+    invoice_query = bool(re.search(r"\b(?:quantity|price|unit|total|sum|invoice|effective)\b", prompt, re.I))
     fact_request = bool(terms := _tokens(prompt))
     for document, blocks, subject in documents:
-        if not fact_request or subject not in members:
+        same_member_family = document["source_id"].split("-", 1)[0] in member_prefixes
+        if not fact_request or not (subject in members or same_member_family):
             continue
         for block in blocks:
             text = block["text"]
-            if not (re.search(r"\d", text) or re.search(r"\b(?:owner|accountable|responsible|effective|amend)\w*\b", text, re.I)):
+            owner_fact = re.search(r"\b(?:owner|accountable|responsible)\b", text, re.I)
+            invoice_fact = re.search(r"\d", text) and re.search(r"\b(?:price|quantity|unit|effective|amend|takes effect)\b", text, re.I)
+            if not ((owner_query and owner_fact) or (invoice_query and invoice_fact)):
                 continue
             key = (document["document_id"], block["id"])
             size = len(text.encode("utf-8"))

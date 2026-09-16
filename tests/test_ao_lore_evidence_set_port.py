@@ -77,6 +77,20 @@ class EvidenceSetPortTests(unittest.TestCase):
         self.assertIn("The verified quantity is 7 units.", rendered)
         self.assertIn("The amended price is 19 credits.", rendered)
 
+    def test_provider_cohort_reads_only_matching_record_family(self):
+        base = generation("# Birch Depot — registry\nBirch Depot purchases service from Sable Works.")
+        base["documents"][0]["source_id"] = "bir410-registry"
+        sibling = generation("The amended price is 31 credits.")["documents"][0]
+        sibling["document_id"], sibling["source_id"] = "birch-price", "bir410-agreement"
+        sibling["document_ir"]["document_id"] = "birch-price"; sibling["document_ir_digest"] = canonical_digest(sibling["document_ir"])
+        foreign = generation("The amended price is 91 credits.")["documents"][0]
+        foreign["document_id"], foreign["source_id"] = "foreign-price", "ash410-agreement"
+        foreign["document_ir"]["document_id"] = "foreign-price"; foreign["document_ir_digest"] = canonical_digest(foreign["document_ir"])
+        base["documents"].extend([sibling, foreign]); base["documents"].sort(key=lambda item: item["document_id"])
+        base["generation_digest"] = canonical_digest({key: item for key, item in base.items() if key != "generation_digest"})
+        rendered = "\n".join(item["render_text"] for item in query_workspace_documents(base, "sandbox", "What is the total price for all sites with the same provider as Birch Depot?")["evidence"])
+        self.assertIn("31 credits", rendered); self.assertNotIn("91 credits", rendered)
+
     def test_export_preserves_exact_unicode_character_offsets(self):
         text = "木の数量。\nThe verified quantity is 17 units."
         current = generation(text)
