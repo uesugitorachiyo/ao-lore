@@ -29,6 +29,68 @@ def generation(text: str, *, sensitivity: str = "public"):
 
 
 class EvidenceSetPortTests(unittest.TestCase):
+    def test_provider_cohort_expands_to_other_explicit_service_members(self):
+        birch = "# Birch Depot — registry\nBirch Depot purchases service from Sable Works.\nThe verified quantity is 4 units."
+        cedar = "# Cedar Spur — registry\nCedar Spur purchases service from Sable Works.\nThe verified quantity is 7 units."
+        other = "# Ash Rise — registry\nAsh Rise purchases service from Other Works.\nThe verified quantity is 9 units."
+        current = generation(birch)
+        for document_id, text in (("cedar", cedar), ("ash", other)):
+            value = generation(text)["documents"][0]
+            value["document_id"] = document_id
+            value["source_id"] = "native-" + document_id
+            value["document_ir"]["document_id"] = document_id
+            value["document_ir_digest"] = canonical_digest(value["document_ir"])
+            current["documents"].append(value)
+        current["documents"].sort(key=lambda item: item["document_id"])
+        current["generation_digest"] = canonical_digest({key: item for key, item in current.items() if key != "generation_digest"})
+        result = query_workspace_documents(
+            current, "sandbox", "Which other locations use the same service provider as Birch Depot?"
+        )
+        rendered = "\n".join(item["render_text"] for item in result["evidence"])
+        self.assertIn("Cedar Spur purchases service from Sable Works.", rendered)
+        self.assertNotIn("Ash Rise purchases service from Other Works.", rendered)
+
+    def test_provider_cohort_keeps_member_facts_after_membership_witnesses(self):
+        birch = "# Birch Depot — registry\nBirch Depot purchases service from Sable Works.\nThe accountable owner is Mira Lake."
+        cedar = "# Cedar Spur — registry\nCedar Spur purchases service from Sable Works.\nThe verified quantity is 7 units.\nThe amended price is 19 credits."
+        current = generation(birch)
+        value = generation(cedar)["documents"][0]
+        value["document_id"] = "cedar"
+        value["source_id"] = "native-cedar"
+        value["document_ir"]["document_id"] = "cedar"
+        first = "# Cedar Spur — registry\nCedar Spur purchases service from Sable Works."
+        second = "The verified quantity is 7 units."
+        third = "The amended price is 19 credits."
+        value["document_ir"]["blocks"] = [
+            {"id": "c1", "type": "paragraph", "text": first, "source_span": {"start": 0, "end": len(first)}},
+            {"id": "c2", "type": "paragraph", "text": second, "source_span": {"start": len(first) + 1, "end": len(first) + 1 + len(second)}},
+            {"id": "c3", "type": "paragraph", "text": third, "source_span": {"start": len(first) + 1 + len(second) + 1, "end": len(first) + 1 + len(second) + 1 + len(third)}},
+        ]
+        value["document_ir_digest"] = canonical_digest(value["document_ir"])
+        current["documents"].append(value)
+        current["documents"].sort(key=lambda item: item["document_id"])
+        current["generation_digest"] = canonical_digest({key: item for key, item in current.items() if key != "generation_digest"})
+        result = query_workspace_documents(
+            current, "sandbox", "What is the total quantity and price for other sites with the same provider as Birch Depot?"
+        )
+        rendered = "\n".join(item["render_text"] for item in result["evidence"])
+        self.assertIn("The verified quantity is 7 units.", rendered)
+        self.assertIn("The amended price is 19 credits.", rendered)
+
+    def test_provider_cohort_reads_only_matching_record_family(self):
+        base = generation("# Birch Depot — registry\nBirch Depot purchases service from Sable Works.")
+        base["documents"][0]["source_id"] = "bir410-registry"
+        sibling = generation("The amended price is 31 credits.")["documents"][0]
+        sibling["document_id"], sibling["source_id"] = "birch-price", "bir410-agreement"
+        sibling["document_ir"]["document_id"] = "birch-price"; sibling["document_ir_digest"] = canonical_digest(sibling["document_ir"])
+        foreign = generation("The amended price is 91 credits.")["documents"][0]
+        foreign["document_id"], foreign["source_id"] = "foreign-price", "ash410-agreement"
+        foreign["document_ir"]["document_id"] = "foreign-price"; foreign["document_ir_digest"] = canonical_digest(foreign["document_ir"])
+        base["documents"].extend([sibling, foreign]); base["documents"].sort(key=lambda item: item["document_id"])
+        base["generation_digest"] = canonical_digest({key: item for key, item in base.items() if key != "generation_digest"})
+        rendered = "\n".join(item["render_text"] for item in query_workspace_documents(base, "sandbox", "What is the total price for all sites with the same provider as Birch Depot?")["evidence"])
+        self.assertIn("31 credits", rendered); self.assertNotIn("91 credits", rendered)
+
     def test_export_preserves_exact_unicode_character_offsets(self):
         text = "木の数量。\nThe verified quantity is 17 units."
         current = generation(text)
