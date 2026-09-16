@@ -80,29 +80,31 @@ faithfulness review remain necessary for that conclusion.
 
 ### Practical RAG benchmark snapshot
 
-The following version-pinned three-system diagnostic measured AO Lore commit
-`65325c3` with the requested shared reader, `gpt-5.6-luna` at medium effort.
+The following version-pinned three-system diagnostic measured the provider-cohort
+revision now merged into this repository with the requested shared reader,
+`gpt-5.6-luna` at medium effort.
 It used a 48-question static track and 128 lifecycle checkpoints; scheduled
 errors remain in every metric denominator. The pinned synthetic corpus
 fingerprint is `da912b3b31b0439f6b2bfa8f8d4df8573d785fea71f3b01ee63f8070e603dfe0`.
 
 | Metric | AO Lore | Basic Memory | LLM-WIKI-RAG |
 |---|---:|---:|---:|
-| Static strict task success | **56.2%** | 54.2% | 27.1% |
-| Static evidence recall | 82.9% | **89.9%** | 20.2% |
-| Static complete evidence coverage | 85.4% | **89.6%** | 29.2% |
-| Static retrieval p50 | **0.022 s** | 0.556 s | 0.136 s |
-| Lifecycle strict task success | **50.8%** | 39.1% | 11.7% |
+| Static strict task success | **50.0%** | 47.9% | 29.2% |
+| Static evidence recall | **96.9%** | 90.7% | 20.2% |
+| Static complete evidence coverage | **91.7%** | 89.6% | 29.2% |
+| Static retrieval p50 | **0.025 s** | 0.521 s | 0.101 s |
+| Lifecycle strict task success | **55.5%** | 41.4% | 12.5% |
 | Lifecycle evidence recall | **100.0%** | 88.7% | 14.3% |
 | Lifecycle stale-evidence errors | 0 | 0 | 0 |
 
 This is evidence that the current verified-document core is competitive on this
 specific workload, especially across document updates; it is not a claim of a
-universal winner. The separately declared 12-question relationship subset is
-not included: AO Lore's provenance guard rejected its exported passages, so
-that track is correctly unqualified rather than reported as zero. The run also
-included one AO Lore lifecycle reader/error record and four LLM-WIKI-RAG
-records; none were removed from scoring.
+universal winner. A separately pinned relationship-subset validation fixed the
+benchmark adapter's source-ID persistence boundary: AO Lore completed all 12
+scheduled attempts with 94.7% evidence recall and 75.0% complete evidence
+coverage. It is a document-core relationship subset, not a certification of
+optional AO graph navigation. Reader strict-success values remain sensitive to
+model sampling; failures remain in denominators and are never removed.
 
 ## Architecture at a glance
 
