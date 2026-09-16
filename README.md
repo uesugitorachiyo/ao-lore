@@ -78,6 +78,32 @@ They do not establish a winner against GraphRAG, Basic Memory, or another
 system; representative authorized corpora, held-out questions, and blind human
 faithfulness review remain necessary for that conclusion.
 
+### Practical RAG benchmark snapshot
+
+The following version-pinned three-system diagnostic measured AO Lore commit
+`65325c3` with the requested shared reader, `gpt-5.6-luna` at medium effort.
+It used a 48-question static track and 128 lifecycle checkpoints; scheduled
+errors remain in every metric denominator. The pinned synthetic corpus
+fingerprint is `da912b3b31b0439f6b2bfa8f8d4df8573d785fea71f3b01ee63f8070e603dfe0`.
+
+| Metric | AO Lore | Basic Memory | LLM-WIKI-RAG |
+|---|---:|---:|---:|
+| Static strict task success | **56.2%** | 54.2% | 27.1% |
+| Static evidence recall | 82.9% | **89.9%** | 20.2% |
+| Static complete evidence coverage | 85.4% | **89.6%** | 29.2% |
+| Static retrieval p50 | **0.022 s** | 0.556 s | 0.136 s |
+| Lifecycle strict task success | **50.8%** | 39.1% | 11.7% |
+| Lifecycle evidence recall | **100.0%** | 88.7% | 14.3% |
+| Lifecycle stale-evidence errors | 0 | 0 | 0 |
+
+This is evidence that the current verified-document core is competitive on this
+specific workload, especially across document updates; it is not a claim of a
+universal winner. The separately declared 12-question relationship subset is
+not included: AO Lore's provenance guard rejected its exported passages, so
+that track is correctly unqualified rather than reported as zero. The run also
+included one AO Lore lifecycle reader/error record and four LLM-WIKI-RAG
+records; none were removed from scoring.
+
 ## Architecture at a glance
 
 AO Lore maintains distinct boundaries for immutable source material, document
