@@ -89,22 +89,24 @@ fingerprint is `da912b3b31b0439f6b2bfa8f8d4df8573d785fea71f3b01ee63f8070e603dfe0
 
 | Metric | AO Lore | Basic Memory | LLM-WIKI-RAG |
 |---|---:|---:|---:|
-| Static strict task success | **50.0%** | 47.9% | 29.2% |
+| Static strict task success | **52.1%** | 43.8% | 29.2% |
 | Static evidence recall | **96.9%** | 90.7% | 20.2% |
 | Static complete evidence coverage | **91.7%** | 89.6% | 29.2% |
-| Static retrieval p50 | **0.025 s** | 0.521 s | 0.101 s |
-| Lifecycle strict task success | **55.5%** | 41.4% | 12.5% |
-| Lifecycle evidence recall | **100.0%** | 88.7% | 14.3% |
+| Relationship-subset strict task success | 25.0% | **33.3%** | 0.0% |
+| Relationship-subset evidence recall | **94.7%** | 86.0% | 21.1% |
+| Static retrieval p50 | **0.023 s** | 0.513 s | 0.098 s |
+| Lifecycle strict task success | **56.2%** | 38.3% | 12.5% |
+| Lifecycle evidence recall | **100.0%** | 91.3% | 14.3% |
 | Lifecycle stale-evidence errors | 0 | 0 | 0 |
 
 This is evidence that the current verified-document core is competitive on this
 specific workload, especially across document updates; it is not a claim of a
-universal winner. A separately pinned relationship-subset validation fixed the
-benchmark adapter's source-ID persistence boundary: AO Lore completed all 12
-scheduled attempts with 94.7% evidence recall and 75.0% complete evidence
-coverage. It is a document-core relationship subset, not a certification of
-optional AO graph navigation. Reader strict-success values remain sensitive to
-model sampling; failures remain in denominators and are never removed.
+universal winner. The relationship subset completed all 12 scheduled attempts
+with 94.7% evidence recall. It is a document-core relationship subset, not a
+certification of optional AO graph navigation. Reader strict-success values
+remain sensitive to model sampling; failures remain in denominators and are
+never removed. The four LLM-WIKI-RAG lifecycle errors remain in that arm's
+denominator.
 
 ## Architecture at a glance
 
